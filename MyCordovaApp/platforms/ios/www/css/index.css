@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css?family=Fjalla+One');
+
+html{
+	height: 100%;
+	width: 100%;
+	background: blue; 
+}
+body {
+	height: 100%;
+	width: 100%;
+    background: blue;   
+    margin:0px;
+}
+.root{
+	width: 100%;
+	height: 100%;
+	background: blue;
+}
+
+.mainTitleContainer{
+	text-align: center;
+	width: 100%;
+	
+}
+.mainTitle{
+	font-family: 'Fjalla One';
+	padding: 0px;
+	font-size: 54px;
+	background: white;
+	color:blue;	
+	line-height: 80px;	
+}	
+.mainContainer{
+	width: 99%;
+	margin-right: auto;
+	margin-left: auto;
+	justify-content: center;
+	display: grid;
+	grid-template-columns: repeat(auto-fill,600px);
+	grid-column-gap:10%;
+	grid-row-gap: 20px;
+
+}
+.projectsContainer{
+	
+}
+.recentActivityContainer{
+	background: red;
+	width:auto-fill;
+}
