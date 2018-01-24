@@ -13,7 +13,7 @@ class Projects extends Component {
           </div>
           <div className="projectsNavsContainer" style={styles.projectsNavsContainer}>
             <ProjectOverview projectOverviewTitle="FL1 PRINTER"/>
-            <ProjectOverview projectOverviewTitle="FL2 BAaER"/>
+            <ProjectOverview projectOverviewTitle="FL2 BARCODER"/>
           </div>
           {/*<div className="projectsButtonsContainer" style={styles.projectsButtonsContainer}>
 

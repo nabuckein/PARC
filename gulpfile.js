@@ -1,8 +1,10 @@
 var gulp = require('gulp');
 
-function defaultTask(){
-	gulp.watch('ReactAppForCordova/src/*.js', console.log("CHANGED"));
+function defaultTask(done){
+	console.log("CHANGED");
 	
 }
 
-gulp.task('default', defaultTask);
+gulp.task('default', function(){
+	gulp.watch('ReactAppForCordova/src/xml/LinkxQuery.xml', defaultTask);
+});
