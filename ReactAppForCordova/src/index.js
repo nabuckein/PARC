@@ -8,5 +8,5 @@ import registerServiceWorker from './registerServiceWorker';
 ReactDOM.render(<App />, document.getElementById('projectsReactContainer'));
 registerServiceWorker();
 
-ReactDOM.render(<RecentActivity />, document.getElementById('recentActivityReactContainer'));
-registerServiceWorker();
+/*ReactDOM.render(<RecentActivity />, document.getElementById('recentActivityReactContainer'));
+registerServiceWorker();*/

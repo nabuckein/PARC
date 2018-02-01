@@ -64,24 +64,12 @@
             messagingSenderId: "712498374479"
           };
           firebase.initializeApp(config);
+
+          
         </script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js" defer></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.4/js/all.js"></script>
-        <script defer type="text/javascript">
-            var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  user     : '426376',
-});
-
-connection.connect(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
-
-  console.log('connected as id ' + connection.threadId);
-});
-        </script>
+        
     </body>
 </html>

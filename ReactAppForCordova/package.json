@@ -6,6 +6,8 @@
     "react-scripts": "1.0.17"
   },
   "dependencies": {
+    "axios": "^0.17.1",
+    "firebase": "^4.9.0",
     "mysql": "^2.15.0",
     "radium": "^0.21.0",
     "react": "^16.2.0",
