@@ -3,7 +3,20 @@ import Radium from 'radium';
 import {StyleRoot} from 'radium';
 import ProjectOverview from './ProjectOverview.js';
 
+var firebase = require("firebase");
+
 class Projects extends Component {
+
+  handleLogOut=(e)=>{
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful.
+      console.log("%cUSER HAS LOGGED OUT", "background-color:red; color:white");
+    }).catch(function(error) {
+      // An error happened.
+      console.log("%cERROR WHILE TRYING TO LOG OUT", "background-color:red; color:white");
+    });
+  }
+
   render() {
     return (
       <StyleRoot>
@@ -15,11 +28,11 @@ class Projects extends Component {
             <ProjectOverview projectOverviewTitle="FL1 PRINTER"/>
             <ProjectOverview projectOverviewTitle="FL2 BARCODER"/>
           </div>
-          {/*<div className="projectsButtonsContainer" style={styles.projectsButtonsContainer}>
+          <div className="projectsButtonsContainer" style={styles.projectsButtonsContainer}>
 
               <button key="button1" style={styles.projectsButtons}>SUBMIT</button>
-              <button key="button2" style={styles.projectsButtons}>CANCEL</button>
-          </div>*/}
+              <button key="button2" style={styles.projectsButtons} onClick={this.handleLogOut} >LOG OUT</button>
+          </div>
         </div>
       </StyleRoot>
     );
