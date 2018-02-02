@@ -30,8 +30,8 @@ class Projects extends Component {
           </div>
           <div className="projectsButtonsContainer" style={styles.projectsButtonsContainer}>
 
-              <button key="button1" style={styles.projectsButtons}>SUBMIT</button>
-              <button key="button2" style={styles.projectsButtons} onClick={this.handleLogOut} >LOG OUT</button>
+              {/*<button key="button1" style={styles.projectsButtons}>SUBMIT</button>*/}
+              <button key="button2" style={styles.projectsButtons} onClick={this.handleLogOut}>LOG OUT</button>
           </div>
         </div>
       </StyleRoot>
@@ -58,5 +58,28 @@ const styles = {
     display:'flex',
     justifyContent:'center',
     marginBottom:100
+  },
+  projectsButtonsContainer:{
+    display:'flex',
+    justifyContent:'center'
+  },
+  projectsButtons:{
+    backgroundColor:'white',
+    border:'none',
+    borderRadius:5,
+    paddingLeft:15,
+    paddingRight:15,
+    fontFamily:'Fjalla One',
+    fontSize:30,
+    marginLeft:10,
+    marginRight:10,
+    ':hover':{
+      backgroundColor:'red',      
+    },
+    ':active':{
+      backgroundColor:'red',
+      color:'white'
+    }      
   }
+
 }

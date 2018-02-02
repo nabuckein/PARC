@@ -6,13 +6,22 @@ class Login extends Component {
 
   handleSubmitButtonClick=(e)=>{
     var firebase = require("firebase");
-    firebase.auth().signInWithEmailAndPassword("pauri@hotmail.com", "test1234").catch(function(error) {
+    var email = document.getElementById("loginEmailInput").value;
+    var password = document.getElementById("loginPasswordInput").value;
+   // var userID = document.getElementById("loginUserIDInput").value;
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
   // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
+      var errorText = document.getElementById("errorMessageText");
       // ...
-      console.log(errorMessage);
+      console.log("%c" + errorMessage, "background-color: orange");      
+      errorText.style.color = 'white';
     });
+  }
+  handleInputsClick=(e)=>{
+    var errorText = document.getElementById("errorMessageText");
+    errorText.style.color = 'blue';
   }
 
   render() {
@@ -20,16 +29,17 @@ class Login extends Component {
       <StyleRoot className="LoginStyleRoot" style={styles.LoginStyleRoot}>
         <div className="Login" style={styles.Login}>
           <div className="loginContainer" style={styles.loginContainer}>                 
-              <h1 className="loginMainTitle" style={styles.loginMainTitle}>Please log in:</h1>
+              <h1 className="loginMainTitle" style={styles.loginMainTitle}>PLEASE LOG IN:</h1>
               <div className="inputsContainer" style={styles.inputsContainer}>
-                <input className="loginInput" style={styles.loginInput} placeholder="Please enter your e-mail"></input>
-                <input className="loginInput" style={styles.loginInput} placeholder="Please enter your User ID"></input>
-                <input className="loginInput" style={styles.loginInput} placeholder="Please enter your password"></input>
+                <input className="loginInput" id="loginEmailInput" style={styles.loginInput} placeholder="Enter your e-mail here" onClick={this.handleInputsClick}></input>
+                {/*<input className="loginInput" id="loginUserIDInput" style={styles.loginInput} placeholder="Please enter your User ID"></input>*/}
+                <input className="loginInput" id="loginPasswordInput" style={styles.loginInput} placeholder="Enter your password here" onClick={this.handleInputsClick}></input>
               </div>
+              <p className="errorMessage" id="errorMessageText" style={styles.errorMessage}> Is your e-mail and password correct? </p>
           </div>
           <div className="loginButtonsContainer" style={styles.loginButtonsContainer}>
             <button className="loginButtonSubmit" key="loginButtonSubmit" style={styles.loginButtonSubmit} onClick={this.handleSubmitButtonClick}>SUBMIT</button>
-            <button className="loginButtonCancel" key="loginButtonCancel" style={styles.loginButtonCancel}>CANCEL</button>
+            {/*<button className="loginButtonCancel" key="loginButtonCancel" style={styles.loginButtonCancel}>CANCEL</button>*/}
           </div>
           
         </div>
@@ -56,12 +66,14 @@ const styles = {
   inputsContainer:{
     display:'flex',
     flexWrap:'wrap',
-    width:'25%',
+    justifyContent:'center',
+    width:'20%',
     marginLeft:'auto',
     marginRight:'auto',
-    marginBottom:200
+    marginBottom:60
   },
   loginInput:{
+    fontFamily:'Pathway Gothic One',
     width:'100%',
     height:30,
     color:'white',
@@ -73,11 +85,14 @@ const styles = {
     borderLeft:'none',
     borderBottom:'solid white 1px',
     borderRadius:6,
-    marginTop:60
+    marginTop:60,
+    fontSize:20
   },
   loginMainTitle:{
     fontFamily:'Fjalla One',
-    color:'white'
+    color:'white',
+    fontSize:28,
+    marginTop:140
   },
   loginButtonsContainer:{
     display:'flex',
@@ -95,7 +110,7 @@ const styles = {
     marginLeft:10,
     marginRight:10,
     ':hover':{
-      backgroundColor:'green',      
+      backgroundColor:'limegreen',      
     },
     ':active':{
       backgroundColor:'green',
@@ -118,6 +133,12 @@ const styles = {
     ':active':{
       backgroundColor:'red',
       color:'white'
+    },
+    
+  },
+  errorMessage:{
+      color:'blue',
+      fontFamily:'Fjalla One',
+      marginBottom:100
     }
-  }
 }
