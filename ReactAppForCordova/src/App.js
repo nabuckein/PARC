@@ -53,7 +53,7 @@ class App extends Component {
       return (
         <div className="App" style={styles.appContainer}>        
           <div className="projectsContainer">
-            <Projects/>
+            <Projects currentUser={this.state.currentUser}/>
           </div>
         </div>
       );
