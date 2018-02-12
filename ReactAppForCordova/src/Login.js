@@ -58,7 +58,7 @@ const styles = {
   },
   Login:{
     width:'100%',
-    backgroundColor:'blue'
+    
   },
   loginContainer:{
     textAlign:'center'

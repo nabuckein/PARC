@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import Projects from './Projects.js';
 import Login from './Login.js';
+import Sidebar from './Sidebar.js';
+import NewProject from './NewProject.js';
+import Radium from 'radium';
+import {StyleRoot} from 'radium';
 
-var firebase = require('firebase');
+const firebase = require('firebase');
 
 
 class App extends Component {
 
   state={
     currentUser:null,
-    currentUserEmail:null
+    currentUserEmail:null,
+    componentToDisplay:"Projects"
   }
   componentWillMount=(e)=>{   
     
@@ -43,22 +48,68 @@ class App extends Component {
       }
     });
   }
+
+  handleNewProjectSubmitButtonClick=(e)=>{  //PASS THIS TO NEW PROJECT COMPONENT AS A PROP IN ORDER TO BE ABLE TO GO BACK TO PROJECTS/SIDEBAR SCREEN
+      var db = firebase.firestore();
+      var a = this;
+      var projNameEl = document.getElementById('newProjectName');
+      var projNumberEl = document.getElementById('newProjectID');
+      if(projNumberEl.value !== "" && projNameEl.value !== ""){
+        db.collection('projects').add({
+          projectName: projNameEl.value,
+          projectNumber: projNumberEl.value
+        });
+        console.log("ADDED: " + projNameEl.value + " " +  projNumberEl.value);
+        this.setState({componentToDisplay:"Projects"});
+        
+      }
+    }
+
+  handleCancelNewProject=(e)=>{
+    this.setState({componentToDisplay:"Projects"});
+  }
+  handleAddNewProject=(e)=>{
+    this.setState({componentToDisplay:"NewProject"})
+  }
   
   render() {
     
     
 
-    if (this.state.currentUser!== null){
+    if (this.state.currentUser!== null && this.state.componentToDisplay === "Projects"){
       
       return (
-        <div className="App" style={styles.appContainer}>        
-          <div className="projectsContainer">
-            <Projects currentUser={this.state.currentUser}/>
+        <StyleRoot>
+          <div className="App" style={styles.appContainer}>        
+            <div className="projectsAndSidebarContainer" style={styles.projectsAndSidebarContainer}>
+              <div className="projectsComponent" style={styles.projectsComponent}>
+                <Projects currentUser={this.state.currentUser} />
+              </div>
+              <div className="sidebarComponent" style={styles.sidebar}>
+                <Sidebar toNewProjects={this.handleAddNewProject}/>
+              </div>
+            </div>
           </div>
-        </div>
+        </StyleRoot>
       );
-    }else{
-      
+    }
+
+    else if(this.state.currentUser!== null && this.state.componentToDisplay === "NewProject"){
+      return (
+        <StyleRoot>
+          <div className="App" style={styles.appContainer}>        
+            <div className="projectsAndSidebarContainer" style={styles.projectsAndSidebarContainer}>
+              <div className="projectsComponent" style={styles.projectsComponent}>
+                <NewProject currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject} handleNewProjectSubmitButtonClick={this.handleNewProjectSubmitButtonClick}/>
+              </div>
+              
+            </div>
+          </div>
+        </StyleRoot>
+      );      
+    }
+
+    else{      
       return(
         <div className="App" style={styles.appContainer}> 
           <div className="projectsContainer">
@@ -77,14 +128,18 @@ class App extends Component {
 export default App;
 
 const styles = {
-  appContainer:{
-    backgroundColor:'blue'
-  },
-  appTitle:{
-    color:'white',
-    fontFamily:'Fjalla One',
+  
+  projectsAndSidebarContainer:{
     width:'100%',
-    textAlign:'center'
+    display:'flex',    
+    justifyContent:'center',
+    
+  },
+  projectsComponent:{
+    width:'80%',
+  },
+  sidebar:{
+    width:'20%'
   }
   
 }

@@ -2,8 +2,17 @@ import React, { Component } from 'react';
 import Radium from 'radium';
 import {StyleRoot} from 'radium';
 
+const firebase = require("firebase");
 
 class ProjectOverview extends Component {
+
+  handleDeleteProject=(e)=>{
+    var db = firebase.firestore();
+    //var projTitleEl = document.getElementById('projectTitle');
+    db.collection('projects').
+    console.log(e.target.id);
+  }
+
   render() {
     return (
       <StyleRoot>
@@ -12,12 +21,13 @@ class ProjectOverview extends Component {
               <h1 style={styles.projectOverviewNavTitle}>{this.props.projectOverviewTitle}</h1>
               <p key="project1PendingRedlines" style={styles.projectOverviewPendingRedlines}>X redlines need to be resolved</p>
               <p key="project1PendingParts" style={styles.projectOverviewPendingParts}>Y parts need to be ordered</p>
-              <button key="project1ButtonRedline" style={styles.projectOverviewButtons}>SUBMIT NEW REDLINE</button>
-              <button key="project1BbuttonPart" style={styles.projectOverviewButtons}>REQUEST A PART</button>
+              <button key="projectButtonRedline" style={styles.projectOverviewButtons}>SUBMIT NEW REDLINE</button>
+              <button key="projectButtonQuickUpdate" style={styles.projectOverviewButtons}>DRAWING QUICK UPDATE</button>
+              <button key="projectButtonPart" style={styles.projectOverviewButtons}>PART STATUS/REQUEST</button>
               <div className="iconsContainer" style={styles.iconsContainer}>
                 <p key="icon1" style={styles.iconsCog}><i className="fas fa-cog fa-2x"></i></p>
                 <p key="icon2" style={styles.iconsEnvelope}><i className="fas fa-envelope fa-2x" ></i></p>
-                <p key="icon3" style={styles.iconsTrash}><i className="fas fa-trash-alt fa-2x" ></i></p>
+                <p  key="icon3" style={styles.iconsTrash} onClick={this.handleDeleteProject}><i id={this.props.projectOverviewTitle} className="fas fa-trash-alt fa-2x" ></i></p>
               </div>
             </nav>
         </div>

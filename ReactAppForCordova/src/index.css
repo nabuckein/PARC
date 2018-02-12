@@ -30,20 +30,3 @@ body {
 	color:blue;	
 	line-height: 80px;	
 }	
-.mainContainer{
-	width: 99%;
-	margin-right: auto;
-	margin-left: auto;
-	
-	display: grid;
-	grid-template-columns: repeat(auto-fill,600px);
-	grid-column-gap:10%;
-	grid-row-gap: 20px;
-	justify-content: center;
-}
-.projectsContainer{
-	
-}
-.sideBarContainer{
-	width:200px;
-}

@@ -66,7 +66,7 @@ class Projects extends Component {
     var projects = [];
     
     for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
-      projects.push(<ProjectOverview projectOverviewTitle={this.state.projectsNameArr[n]}/>);
+      projects.push(<ProjectOverview key={"projectOverview"+n} projectOverviewTitle={this.state.projectsNameArr[n]}/>);
     }
 
     return (

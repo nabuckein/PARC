@@ -34,17 +34,16 @@ body {
 	width: 99%;
 	margin-right: auto;
 	margin-left: auto;
-	justify-content: center;
+	
 	display: grid;
 	grid-template-columns: repeat(auto-fill,600px);
 	grid-column-gap:10%;
 	grid-row-gap: 20px;
-
+	justify-content: center;
 }
 .projectsContainer{
 	
 }
-.recentActivityContainer{
-	background: red;
-	width:auto-fill;
+.sideBarContainer{
+	width:200px;
 }
