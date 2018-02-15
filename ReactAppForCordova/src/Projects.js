@@ -12,25 +12,79 @@ class Projects extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      projectsNameArr: []
+      projectsNameArr: [],
+      projectsID: []
     };
   }
 
- 
-  componentWillMount=(e)=>{
+  projectDeletedRerender=(e)=>{
     require("firebase/firestore");
     var db = firebase.firestore();
     var projectsNameArr = [];
+    var projectsIDArr = [];
     //ALL USERS CAN SEE ALL PROJECTS APPROACH
     db.collection('projects').get()
     .then((snapshot) => {
         snapshot.forEach((doc) => {
             console.log(doc.id, '=>', doc.data().projectName);
             projectsNameArr.push(doc.data().projectName);
-            
+            projectsIDArr.push(doc.id);
 
         });
-        this.setState({projectsNameArr : projectsNameArr});
+        this.setState({projectsNameArr : projectsNameArr, projectsID: projectsIDArr});
+    })
+    .catch((err) => {
+        console.log('Error getting documents', err);
+    });
+  }
+ 
+  componentWillMount=(e)=>{
+
+
+    require("firebase/firestore");
+
+
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+var storage = firebase.storage();
+
+// Create a storage reference from our storage service
+var storageRef = storage.ref();
+var pathReference = storage.ref('LinkxQuery.xml');
+
+
+storageRef.child('LinkxQuery.xml').getDownloadURL().then(function(url) {
+  // `url` is the download URL for 'images/stars.jpg'
+
+  // This can be downloaded directly:
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob';
+  xhr.onload = function(event) {
+    var blob = xhr.response;
+  };
+  xhr.open('GET', url);
+  xhr.send();
+
+  // Or inserted into an <img> element:
+  console.log(xhr.response);
+}).catch(function(error) {
+  // Handle any errors
+  console.log("ERROR %c" + error, "background:purple; color:white");
+});
+
+
+    var db = firebase.firestore();
+    var projectsNameArr = [];
+    var projectsIDArr = [];
+    //ALL USERS CAN SEE ALL PROJECTS APPROACH
+    db.collection('projects').get()
+    .then((snapshot) => {
+        snapshot.forEach((doc) => {
+            console.log(doc.id, '=>', doc.data().projectName);
+            projectsNameArr.push(doc.data().projectName);
+            projectsIDArr.push(doc.id);
+
+        });
+        this.setState({projectsNameArr : projectsNameArr, projectsID: projectsIDArr});
     })
     .catch((err) => {
         console.log('Error getting documents', err);
@@ -66,7 +120,7 @@ class Projects extends Component {
     var projects = [];
     
     for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
-      projects.push(<ProjectOverview key={"projectOverview"+n} projectOverviewTitle={this.state.projectsNameArr[n]}/>);
+      projects.push(<ProjectOverview key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsID[n]}/>);
     }
 
     return (

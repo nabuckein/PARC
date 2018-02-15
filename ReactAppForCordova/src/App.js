@@ -23,11 +23,11 @@ class App extends Component {
             authDomain: "baxter-parc.firebaseapp.com",
             databaseURL: "https://baxter-parc.firebaseio.com",
             projectId: "baxter-parc",
-            storageBucket: "",
+            storageBucket: "gs://baxter-parc.appspot.com",
             messagingSenderId: "712498374479"
           };
     firebase.initializeApp(config);
-
+    
 
     this.firebaseUserSignedInFunction();
 

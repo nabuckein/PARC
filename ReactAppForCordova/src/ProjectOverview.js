@@ -9,8 +9,10 @@ class ProjectOverview extends Component {
   handleDeleteProject=(e)=>{
     var db = firebase.firestore();
     //var projTitleEl = document.getElementById('projectTitle');
-    db.collection('projects').
-    console.log(e.target.id);
+    var projToDelete = this.props.projectID;
+    db.collection('projects').doc(projToDelete).delete();
+    console.log("%c" + this.props.projectID + ", " + this.props.projectOverviewTitle + " has been deleted.", "background:red; color:yellow");
+    this.props.reRenderAfterProjectDelete();
   }
 
   render() {
@@ -27,7 +29,7 @@ class ProjectOverview extends Component {
               <div className="iconsContainer" style={styles.iconsContainer}>
                 <p key="icon1" style={styles.iconsCog}><i className="fas fa-cog fa-2x"></i></p>
                 <p key="icon2" style={styles.iconsEnvelope}><i className="fas fa-envelope fa-2x" ></i></p>
-                <p  key="icon3" style={styles.iconsTrash} onClick={this.handleDeleteProject}><i id={this.props.projectOverviewTitle} className="fas fa-trash-alt fa-2x" ></i></p>
+                <p  key="icon3" style={styles.iconsTrash} onClick={this.handleDeleteProject}><i id={this.props.projectID} className="fas fa-trash-alt fa-2x" ></i></p>
               </div>
             </nav>
         </div>
