@@ -105,8 +105,9 @@ class NewProject extends Component{
 
 				            </div>
 			            </div>
-			            <p className="newProjectErrorMessage" id="newProjectErrorMessageText" style={styles.newProjectErrorMessage}> Is your e-mail and password correct? </p>
+			            <p className="newProjectErrorMessage" id="newProjectErrorMessageText" style={styles.newProjectErrorMessage}> This project already exists. Is the project number correct? </p>
 			        </div>
+				
 		            <div className="newProjectButtonsContainer" style={styles.newProjectButtonsContainer}>
 		          	    <button className="newProjectButtonSubmit" key="newProjectButtonSubmit" style={styles.newProjectButtonSubmit} onClick={this.props.handleNewProjectSubmitButtonClick}>SUBMIT</button>
 		                <button className="newProjectButtonCancel" key="newProjectButtonCancel" style={styles.newProjectButtonCancel} onClick={this.props.backToProjects}>CANCEL</button>
@@ -162,7 +163,9 @@ const styles = {
 	    marginTop:140
 	},
 	newProjectErrorMessage:{
-		color:'blue'
+		color:'blue',
+		fontFamily:'Fjalla One',
+		marginBottom:100
 	},
 	newProjectButtonsContainer:{
 	    display:'flex',

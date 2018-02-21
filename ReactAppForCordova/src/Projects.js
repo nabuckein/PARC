@@ -44,34 +44,6 @@ class Projects extends Component {
     require("firebase/firestore");
 
 
-    // Get a reference to the storage service, which is used to create references in your storage bucket
-var storage = firebase.storage();
-
-// Create a storage reference from our storage service
-var storageRef = storage.ref();
-var pathReference = storage.ref('LinkxQuery.xml');
-
-
-storageRef.child('LinkxQuery.xml').getDownloadURL().then(function(url) {
-  // `url` is the download URL for 'images/stars.jpg'
-
-  // This can be downloaded directly:
-  var xhr = new XMLHttpRequest();
-  xhr.responseType = 'blob';
-  xhr.onload = function(event) {
-    var blob = xhr.response;
-  };
-  xhr.open('GET', url);
-  xhr.send();
-
-  // Or inserted into an <img> element:
-  console.log(xhr.response);
-}).catch(function(error) {
-  // Handle any errors
-  console.log("ERROR %c" + error, "background:purple; color:white");
-});
-
-
     var db = firebase.firestore();
     var projectsNameArr = [];
     var projectsIDArr = [];
@@ -120,16 +92,17 @@ storageRef.child('LinkxQuery.xml').getDownloadURL().then(function(url) {
     var projects = [];
     
     for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
-      projects.push(<ProjectOverview key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsID[n]}/>);
+      //PASS TO 'PROJECT OVERVIEW' COMPONENT THE METHOD handleProjectClick FROM 'APP VIA prop toProjectStatus
+      projects.push(<ProjectOverview toProjectStatus={this.props.toProjectStatus} key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsID[n]}/>);
     }
 
     return (
       <StyleRoot>
-        <div className="Projects" style={styles.projectsContainer}>
+        <div className="Projects" style={styles.projectsContainer} >
           <div className="titleContainer" style={styles.projectsTitleContainer}>                 
               <h1 className="projectsMainTitle" style={styles.projectsMainTitle}>PROJECTS</h1>
           </div>
-          <div className="projectsNavsContainer" style={styles.projectsNavsContainer}>
+          <div className="projectsNavsContainer" style={styles.projectsNavsContainer} >
             {projects}
             
           </div>

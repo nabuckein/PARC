@@ -3,6 +3,7 @@ import Projects from './Projects.js';
 import Login from './Login.js';
 import Sidebar from './Sidebar.js';
 import NewProject from './NewProject.js';
+import ProjectStatus from './ProjectStatus.js';
 import Radium from 'radium';
 import {StyleRoot} from 'radium';
 
@@ -51,24 +52,40 @@ class App extends Component {
 
   handleNewProjectSubmitButtonClick=(e)=>{  //PASS THIS TO NEW PROJECT COMPONENT AS A PROP IN ORDER TO BE ABLE TO GO BACK TO PROJECTS/SIDEBAR SCREEN
       var db = firebase.firestore();
-      var a = this;
       var projNameEl = document.getElementById('newProjectName');
       var projNumberEl = document.getElementById('newProjectID');
       if(projNumberEl.value !== "" && projNameEl.value !== ""){
-        db.collection('projects').add({
-          projectName: projNameEl.value,
-          projectNumber: projNumberEl.value
-        });
-        console.log("ADDED: " + projNameEl.value + " " +  projNumberEl.value);
-        this.setState({componentToDisplay:"Projects"});
+        var projRef = db.collection('projects').doc(projNumberEl.value);
+        var getDoc = projRef.get()
+        .then(doc => {
+          if(!doc.exists){
+            projRef.set ({
+              projectName: projNameEl.value,
+              projectNumber: projNumberEl.value
+            });
+            console.log("ADDED: " + projNameEl.value + " " +  projNumberEl.value);
+            this.setState({componentToDisplay:"Projects"});
+          }else{
+            var errorText = document.getElementById("newProjectErrorMessageText");
+            // ...
+            console.log("%cThis project already exists", "background-color: orange");      
+            errorText.style.color = 'white';
+          }
         
-      }
-    }
+        }).catch(err =>{
+          console.log('Error getting document', err);
 
-  handleCancelNewProject=(e)=>{
+        });
+    }
+  }
+  handleProjectClick=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECT STATUS' SCREEN, PASSED TO 'PROJECTS' AND THEN TO 'PROJECT OVERVIEW'
+    console.log("Project clicked");
+    this.setState({componentToDisplay:"ProjectStatus"});
+  }
+  handleCancelNewProject=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECTS' SCREEN
     this.setState({componentToDisplay:"Projects"});
   }
-  handleAddNewProject=(e)=>{
+  handleAddNewProject=(e)=>{ //METHOD TO SWITCH SCREEN TO 'NEW PROJECT' SCREEN
     this.setState({componentToDisplay:"NewProject"})
   }
   
@@ -83,7 +100,7 @@ class App extends Component {
           <div className="App" style={styles.appContainer}>        
             <div className="projectsAndSidebarContainer" style={styles.projectsAndSidebarContainer}>
               <div className="projectsComponent" style={styles.projectsComponent}>
-                <Projects currentUser={this.state.currentUser} />
+                <Projects currentUser={this.state.currentUser} toProjectStatus={this.handleProjectClick}/>
               </div>
               <div className="sidebarComponent" style={styles.sidebar}>
                 <Sidebar toNewProjects={this.handleAddNewProject}/>
@@ -101,6 +118,20 @@ class App extends Component {
             <div className="projectsAndSidebarContainer" style={styles.projectsAndSidebarContainer}>
               <div className="projectsComponent" style={styles.projectsComponent}>
                 <NewProject currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject} handleNewProjectSubmitButtonClick={this.handleNewProjectSubmitButtonClick}/>
+              </div>
+              
+            </div>
+          </div>
+        </StyleRoot>
+      );      
+    }
+    else if(this.state.currentUser!== null && this.state.componentToDisplay === "ProjectStatus"){
+      return (
+        <StyleRoot>
+          <div className="App" style={styles.appContainer}>        
+            <div className="projectsAndSidebarContainer" style={styles.projectsAndSidebarContainer}>
+              <div className="projectsComponent" style={styles.projectsComponent}>
+                <ProjectStatus currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/>
               </div>
               
             </div>

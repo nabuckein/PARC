@@ -6,9 +6,12 @@ const firebase = require("firebase");
 
 class ProjectOverview extends Component {
 
+  handleProjectClickFromProjectsComponent=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECT STATUS', PASSED FROM 'APP', VIA 'PROJECTS'
+    console.log("TEST");
+    this.props.toProjectStatus();
+  }
   handleDeleteProject=(e)=>{
     var db = firebase.firestore();
-    //var projTitleEl = document.getElementById('projectTitle');
     var projToDelete = this.props.projectID;
     db.collection('projects').doc(projToDelete).delete();
     console.log("%c" + this.props.projectID + ", " + this.props.projectOverviewTitle + " has been deleted.", "background:red; color:yellow");
@@ -18,7 +21,7 @@ class ProjectOverview extends Component {
   render() {
     return (
       <StyleRoot>
-        <div className="projectOverviewContainer" style={styles.projectOverviewContainer}>
+        <div className="projectOverviewContainer" style={styles.projectOverviewContainer} onClick={this.handleProjectClickFromProjectsComponent}>
           <nav key="projectOverview1" style={styles.projectOverviewNav}>
               <h1 style={styles.projectOverviewNavTitle}>{this.props.projectOverviewTitle}</h1>
               <p key="project1PendingRedlines" style={styles.projectOverviewPendingRedlines}>X redlines need to be resolved</p>
