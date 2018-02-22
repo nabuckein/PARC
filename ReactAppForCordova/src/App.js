@@ -28,18 +28,14 @@ class App extends Component {
             messagingSenderId: "712498374479"
           };
     firebase.initializeApp(config);
-    
-
     this.firebaseUserSignedInFunction();
-
   }
 
   firebaseUserSignedInFunction=(e)=>{
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
         // User is signed in.
-        console.log("%cCURRENT USER'S E-MAIL: " + user.email, "background: blue; color:white");
-        
+        console.log("%cCURRENT USER'S E-MAIL: " + user.email, "background: blue; color:white");        
         this.setState({currentUser:user});
       } 
       else {
@@ -79,7 +75,6 @@ class App extends Component {
     }
   }
   handleProjectClick=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECT STATUS' SCREEN, PASSED TO 'PROJECTS' AND THEN TO 'PROJECT OVERVIEW'
-    console.log("Project clicked");
     this.setState({componentToDisplay:"ProjectStatus"});
   }
   handleCancelNewProject=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECTS' SCREEN
@@ -90,11 +85,7 @@ class App extends Component {
   }
   
   render() {
-    
-    
-
-    if (this.state.currentUser!== null && this.state.componentToDisplay === "Projects"){
-      
+    if (this.state.currentUser!== null && this.state.componentToDisplay === "Projects"){      
       return (
         <StyleRoot>
           <div className="App" style={styles.appContainer}>        

@@ -61,30 +61,14 @@ class Projects extends Component {
     .catch((err) => {
         console.log('Error getting documents', err);
     });
-
-
-    //ALL USERS CAN SEE ONLY THEIR PROJECTS APPROACH
-
-    /*
-    var currentUserFromDB = "";
-    var currentUsersProjects = [];
-    db.collection('users').get().then((snapshot)=>{
-      snapshot.forEach((doc) => {
-        
-        if(this.props.currentUser.email === doc.data().email){
-          currentUserFromDB = doc.data().email;
-          currentUsersProjects.push(doc.data().userProjects);
-          console.log(doc.data());
-        }
-        //console.log(currentUsersProjects);
-      });
-    })
-    .catch((err) => {
-        console.log('Error getting documents', err);
-    });
-    */
-
   }
+  passToProjectStatus=(e)=>{
+    //console.log(this);
+    this.props.toProjectStatus();
+  }
+    
+
+  
 
   render() {
     console.log(this.props.currentUser.email);
@@ -93,7 +77,7 @@ class Projects extends Component {
     
     for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
       //PASS TO 'PROJECT OVERVIEW' COMPONENT THE METHOD handleProjectClick FROM 'APP VIA prop toProjectStatus
-      projects.push(<ProjectOverview toProjectStatus={this.props.toProjectStatus} key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsID[n]}/>);
+      projects.push(<ProjectOverview toProjectStatus={this.passToProjectStatus} key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsID[n]}/>);
     }
 
     return (

@@ -7,23 +7,28 @@ const firebase = require("firebase");
 class ProjectOverview extends Component {
 
   handleProjectClickFromProjectsComponent=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECT STATUS', PASSED FROM 'APP', VIA 'PROJECTS'
-    console.log("TEST");
+    
+    
     this.props.toProjectStatus();
+    console.log(this.props.projectOverviewTitle);
   }
   handleDeleteProject=(e)=>{
+    e.stopPropagation();
     var db = firebase.firestore();
     var projToDelete = this.props.projectID;
     db.collection('projects').doc(projToDelete).delete();
     console.log("%c" + this.props.projectID + ", " + this.props.projectOverviewTitle + " has been deleted.", "background:red; color:yellow");
     this.props.reRenderAfterProjectDelete();
   }
-
+  handleEnvelopeClick=(e)=>{
+    e.stopPropagation();
+  }
   render() {
     return (
       <StyleRoot>
-        <div className="projectOverviewContainer" style={styles.projectOverviewContainer} onClick={this.handleProjectClickFromProjectsComponent}>
-          <nav key="projectOverview1" style={styles.projectOverviewNav}>
-              <h1 style={styles.projectOverviewNavTitle}>{this.props.projectOverviewTitle}</h1>
+        <div className="projectOverviewContainer" style={styles.projectOverviewContainer} >
+          <nav key="projectOverview1" style={styles.projectOverviewNav} onClick={this.handleProjectClickFromProjectsComponent}>
+              <h1 style={styles.projectOverviewNavTitle} >{this.props.projectOverviewTitle}</h1>
               <p key="project1PendingRedlines" style={styles.projectOverviewPendingRedlines}>X redlines need to be resolved</p>
               <p key="project1PendingParts" style={styles.projectOverviewPendingParts}>Y parts need to be ordered</p>
               <button key="projectButtonRedline" style={styles.projectOverviewButtons}>SUBMIT NEW REDLINE</button>
@@ -31,8 +36,8 @@ class ProjectOverview extends Component {
               <button key="projectButtonPart" style={styles.projectOverviewButtons}>PART STATUS/REQUEST</button>
               <div className="iconsContainer" style={styles.iconsContainer}>
                 <p key="icon1" style={styles.iconsCog}><i className="fas fa-cog fa-2x"></i></p>
-                <p key="icon2" style={styles.iconsEnvelope}><i className="fas fa-envelope fa-2x" ></i></p>
-                <p  key="icon3" style={styles.iconsTrash} onClick={this.handleDeleteProject}><i id={this.props.projectID} className="fas fa-trash-alt fa-2x" ></i></p>
+                <p key="icon2" style={styles.iconsEnvelope} onClick={this.handleEnvelopeClick}><i className="fas fa-envelope fa-2x" ></i></p>
+                <p key="icon3" style={styles.iconsTrash} onClick={this.handleDeleteProject}><i id={this.props.projectID} className="fas fa-trash-alt fa-2x" ></i></p>
               </div>
             </nav>
         </div>
