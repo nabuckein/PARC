@@ -46,43 +46,12 @@ class App extends Component {
     });
   }
 
-  handleNewProjectSubmitButtonClick=(e)=>{  //PASS THIS TO NEW PROJECT COMPONENT AS A PROP IN ORDER TO BE ABLE TO GO BACK TO PROJECTS/SIDEBAR SCREEN
-      var db = firebase.firestore();
-      var projNameEl = document.getElementById('newProjectName');
-      var projNumberEl = document.getElementById('newProjectID');
-      if(projNumberEl.value !== "" && projNameEl.value !== ""){
-        var projRef = db.collection('projects').doc(projNumberEl.value);
-        var getDoc = projRef.get()
-        .then(doc => {
-          if(!doc.exists){
-            projRef.set ({
-              projectName: projNameEl.value,
-              projectNumber: projNumberEl.value
-            });
-            console.log("ADDED: " + projNameEl.value + " " +  projNumberEl.value);
-            this.setState({componentToDisplay:"Projects"});
-          }else{
-            var errorText = document.getElementById("newProjectErrorMessageText");
-            // ...
-            console.log("%cThis project already exists", "background-color: orange");      
-            errorText.style.color = 'white';
-          }
-        
-        }).catch(err =>{
-          console.log('Error getting document', err);
+  
 
-        });
-    }
-  }
-  handleProjectClick=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECT STATUS' SCREEN, PASSED TO 'PROJECTS' AND THEN TO 'PROJECT OVERVIEW'
-    this.setState({componentToDisplay:"ProjectStatus"});
-  }
   handleCancelNewProject=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECTS' SCREEN
     this.setState({componentToDisplay:"Projects"});
   }
-  handleAddNewProject=(e)=>{ //METHOD TO SWITCH SCREEN TO 'NEW PROJECT' SCREEN
-    this.setState({componentToDisplay:"NewProject"})
-  }
+
   
   render() {
     if (this.state.currentUser!== null && this.state.componentToDisplay === "Projects"){      
@@ -91,45 +60,17 @@ class App extends Component {
           <div className="App" style={styles.appContainer}>        
             <div className="projectsAndSidebarContainer" style={styles.projectsAndSidebarContainer}>
               <div className="projectsComponent" style={styles.projectsComponent}>
-                <Projects currentUser={this.state.currentUser} toProjectStatus={this.handleProjectClick}/>
+                <Projects currentUser={this.state.currentUser} toProjectStatus={this.handleProjectClick} componentToDisplay={this.state.componentToDisplay}/>
               </div>
-              <div className="sidebarComponent" style={styles.sidebar}>
-                <Sidebar toNewProjects={this.handleAddNewProject}/>
-              </div>
+              
             </div>
           </div>
         </StyleRoot>
       );
     }
 
-    else if(this.state.currentUser!== null && this.state.componentToDisplay === "NewProject"){
-      return (
-        <StyleRoot>
-          <div className="App" style={styles.appContainer}>        
-            <div className="projectsAndSidebarContainer" style={styles.projectsAndSidebarContainer}>
-              <div className="projectsComponent" style={styles.projectsComponent}>
-                <NewProject currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject} handleNewProjectSubmitButtonClick={this.handleNewProjectSubmitButtonClick}/>
-              </div>
-              
-            </div>
-          </div>
-        </StyleRoot>
-      );      
-    }
-    else if(this.state.currentUser!== null && this.state.componentToDisplay === "ProjectStatus"){
-      return (
-        <StyleRoot>
-          <div className="App" style={styles.appContainer}>        
-            <div className="projectsAndSidebarContainer" style={styles.projectsAndSidebarContainer}>
-              <div className="projectsComponent" style={styles.projectsComponent}>
-                <ProjectStatus currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/>
-              </div>
-              
-            </div>
-          </div>
-        </StyleRoot>
-      );      
-    }
+    
+    
 
     else{      
       return(

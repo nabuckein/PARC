@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import Radium from 'radium';
 import {StyleRoot} from 'radium';
 import ProjectOverview from './ProjectOverview.js';
-
+import Sidebar from './Sidebar.js';
+import NewProject from './NewProject.js';
+import ProjectStatus from './ProjectStatus.js';
 
 const firebase = require("firebase");
     // Required for side-effects
@@ -13,7 +15,9 @@ class Projects extends Component {
     super(props);
     this.state = {
       projectsNameArr: [],
-      projectsID: []
+      projectsID: [],
+      componentToDisplay: this.props.componentToDisplay,
+      currentProject:'none'
     };
   }
 
@@ -62,24 +66,67 @@ class Projects extends Component {
         console.log('Error getting documents', err);
     });
   }
-  passToProjectStatus=(e)=>{
-    //console.log(this);
-    this.props.toProjectStatus();
-  }
-    
-
   
+    
+  handleNewProjectSubmitButtonClick=(e)=>{  //PASS THIS TO NEW PROJECT COMPONENT AS A PROP IN ORDER TO BE ABLE TO GO BACK TO PROJECTS/SIDEBAR SCREEN
+      var db = firebase.firestore();
+      var projNameEl = document.getElementById('newProjectName');
+      var projNumberEl = document.getElementById('newProjectID');
+      if(projNumberEl.value !== "" && projNameEl.value !== ""){
+        var projRef = db.collection('projects').doc(projNumberEl.value);
+        var getDoc = projRef.get()
+        .then(doc => {
+          if(!doc.exists){
+            projRef.set ({
+              projectName: projNameEl.value,
+              projectNumber: projNumberEl.value
+            });
+            console.log("ADDED: " + projNameEl.value + " " +  projNumberEl.value);
+            this.setState({componentToDisplay:"Projects"});
+          }else{
+            var errorText = document.getElementById("newProjectErrorMessageText");
+            // ...
+            console.log("%cThis project already exists", "background-color: orange");      
+            errorText.style.color = 'white';
+          }
+        
+        }).catch(err =>{
+          console.log('Error getting document', err);
+
+        });
+    }
+  }
+  handleAddNewProject=(e)=>{
+    this.setState({componentToDisplay:'NewProject'});
+  }
+  handleCancelNewProject=(e)=>{
+    this.setState({componentToDisplay:'Projects'});
+  }
+  toProjectStatus=(e)=>{
+    console.log(e.target.id);
+    var title = 'projectTitle';
+    this.setState({componentToDisplay:"ProjectStatus", currentProject:e.target.id});
+  }
 
   render() {
     console.log(this.props.currentUser.email);
     
     var projects = [];
-    
-    for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
-      //PASS TO 'PROJECT OVERVIEW' COMPONENT THE METHOD handleProjectClick FROM 'APP VIA prop toProjectStatus
-      projects.push(<ProjectOverview toProjectStatus={this.passToProjectStatus} key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsID[n]}/>);
+    var sidebar,newProject,projectStatus;
+    if(this.state.componentToDisplay === 'Projects'){
+      for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
+        //PASS TO 'PROJECT OVERVIEW' COMPONENT THE METHOD handleProjectClick FROM 'APP VIA prop toProjectStatus
+        projects.push(<ProjectOverview toProjectStatus={this.toProjectStatus} key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsID[n]}/>);
+      }
+      sidebar = <Sidebar toNewProjects={this.handleAddNewProject}/>;
+      
     }
-
+    else if(this.state.componentToDisplay ==='NewProject'){
+      newProject = <NewProject currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject} handleNewProjectSubmitButtonClick={this.handleNewProjectSubmitButtonClick}/>;
+    }
+    else if(this.state.componentToDisplay ==='ProjectStatus'){
+      projectStatus = <ProjectStatus title={this.state.currentProject} currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/>;
+    }
     return (
       <StyleRoot>
         <div className="Projects" style={styles.projectsContainer} >
@@ -88,7 +135,9 @@ class Projects extends Component {
           </div>
           <div className="projectsNavsContainer" style={styles.projectsNavsContainer} >
             {projects}
-            
+            {sidebar}
+            {newProject}
+            {projectStatus}
           </div>
           
         </div>

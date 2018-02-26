@@ -11,10 +11,8 @@ class ProjectStatus extends Component{
 			<StyleRoot>
 				<div className="ProjectStatus">
                     <div className="projectStatusButtonsContainer" style={styles.projectStatusButtonsContainer}>
-						<h1 style={styles.title}>{this.props.title}</h1>
+		                <button className="projectStatusButtonCancel" key="projectStatusButtonCancel" style={styles.projectStatusButtonCancel} onClick={this.props.backToProjects}>CANCEL</button>
 		            </div>
-					<button className="projectStatusButtonCancel" key="projectStatusButtonCancel" style={styles.projectStatusButtonCancel} onClick={this.props.backToProjects}>CANCEL</button>
-
 				</div>
 			</StyleRoot>
 		)
@@ -24,11 +22,6 @@ class ProjectStatus extends Component{
 export default ProjectStatus;
 
 const styles={
-	title:{
-		color:'white',
-		fontFamily:'Fjalla One',
-		textAlign:'center'
-	},
     projectStatusButtonsContainer:{
 	    display:'flex',
 	    justifyContent:'center',
