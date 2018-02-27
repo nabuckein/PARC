@@ -99,7 +99,7 @@ const styles = {
     
   },
   projectsComponent:{
-    width:'80%',
+    width:'100%',
   },
   sidebar:{
     width:'20%'

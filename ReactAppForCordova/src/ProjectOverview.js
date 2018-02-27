@@ -21,8 +21,10 @@ class ProjectOverview extends Component {
     return (
       <StyleRoot>
         <div className="projectOverviewContainer" style={styles.projectOverviewContainer} >
-          <nav key="projectOverview1" id={this.props.projectOverviewTitle} style={styles.projectOverviewNav} onClick={this.props.toProjectStatus}>
-              <h1 style={styles.projectOverviewNavTitle} >{this.props.projectOverviewTitle}</h1>
+          <nav key="projectOverview1" class="projectOverviewNav"  style={styles.projectOverviewNav} >
+              <div style={styles.projectOverviewNavTitleDiv}>
+                <h1 style={styles.projectOverviewNavTitle} id={this.props.projectOverviewTitle} onClick={this.props.toProjectStatus}>{this.props.projectOverviewTitle}</h1>
+              </div>
               <p key="project1PendingRedlines" style={styles.projectOverviewPendingRedlines}>X redlines need to be resolved</p>
               <p key="project1PendingParts" style={styles.projectOverviewPendingParts}>Y parts need to be ordered</p>
               <button key="projectButtonRedline" style={styles.projectOverviewButtons}>SUBMIT NEW REDLINE</button>
@@ -59,12 +61,34 @@ const styles = {
     width:300,    
     textAlign:'center',
     ':hover':{
-      border:'solid white 2px'
+      border:'solid white 2px',
     }
   },
+  projectOverviewNavTitleDiv:{
+    paddingTop:10,
+    paddingBottom:10,
+    marginTop:10,
+    marginBottom:10,
+    marginLeft:10,
+    marginRight:10,
+  },
   projectOverviewNavTitle:{
+    height:28,
+    paddingTop:10,
+    paddingBottom:10,
+    paddingLeft:10,
+    paddingRight:10,
+    marginTop:10,
+    marginBottom:10,
+    marginLeft:10,
+    marginRight:10,
     color:'white',
+    fontSize:22,    
     fontFamily:'Fjalla One',
+    ':hover':{
+      fontSize:24,
+      color:'#22ff00'
+    }
   },
   projectOverviewPendingRedlines:{
     color:'white',

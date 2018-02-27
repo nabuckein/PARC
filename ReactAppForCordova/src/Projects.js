@@ -125,7 +125,7 @@ class Projects extends Component {
       newProject = <NewProject currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject} handleNewProjectSubmitButtonClick={this.handleNewProjectSubmitButtonClick}/>;
     }
     else if(this.state.componentToDisplay ==='ProjectStatus'){
-      projectStatus = <ProjectStatus title={this.state.currentProject} currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/>;
+      projectStatus = <div style={styles.test}><ProjectStatus title={this.state.currentProject} currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
     }
     return (
       <StyleRoot>
@@ -163,9 +163,13 @@ const styles = {
   },
   projectsNavsContainer:{
     display:'flex',
+    width:'100%',
     justifyContent:'center',
     marginBottom:100
+  },
+  test:{
+    width:'100%'
   }
- 
+  
 
 }
