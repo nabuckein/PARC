@@ -5,26 +5,52 @@ import {StyleRoot} from 'radium';
 const firebase = require("firebase");
 
 class ProjectStatus extends Component{
-	componentWillMount=(e)=>{
-		require("firebase/firestore");
+	
+	constructor(props){
+		super(props);
+		this.state={
+			teamMembers:[]
+		}
 		var db = firebase.firestore();
-		var cityRef = db.collection('projects').doc('09493C');
+		var cityRef = db.collection('projects').doc('09493C'); 
+		var teamRef;
 		var getDoc = cityRef.get()
 			.then(doc => {
 				if (!doc.exists) {
 					console.log('No such document!');
 				} else {
-					console.log('Document data:', doc.data().team[0]);
+					console.log(doc.data().team);
+					teamRef = doc.data().team;
+					this.setState({teamMembers:teamRef});
+					/*
+					var ref =  doc.data().team[0];
+					ref.get().then(documentSnapshot => { //GET ENTIRE DOCUMENT IN THE REFERENCE
+						let data = documentSnapshot.data();
+						console.log(data);
+					});*/
+					/*
+					ref.get().then(documentSnapshot => { //GET ONLY FIRST NAME IN tHIs REFERENCE
+					if (documentSnapshot.exists) {
+						console.log(documentSnapshot.get('firstName'));
+					}
+					});*/
 				}
 			})
 			.catch(err => {
 				console.log('Error getting document', err);
 			});
+	}
+	componentWillMount=(e)=>{
+		require("firebase/firestore");
+		
 
 	}
 
+	
 
 	render(){
+
+
 		return(
 			<div>
 			<StyleRoot >
