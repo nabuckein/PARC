@@ -57,7 +57,9 @@ class ProjectStatus extends Component{
 
 	}
 
-	
+	addTeamMemberClick=(e)=>{
+		document.getElementById('addTeamMemberSelect').style.opacity = '1.0';
+	}
 
 	render(){
 		
@@ -94,6 +96,13 @@ class ProjectStatus extends Component{
 								<h2 style={styles.projectStatusSecondaryTitle}>Team</h2>
 								<p>{this.state.teamMembers[0]}</p>
 								<p>{this.state.teamMembers[1]}</p>
+								<div id="addTeamMemberSelect" style={styles.projectStatusNewTeamMemberSelectAndButton}>
+									<select className="projectStatusAddTeamMemberSelect" style={styles.projectStatusSelect} placeholder="Add Team Member" key="projectStatusAddTeamMemberSelect" >
+										<option className="projectStatusAddTeamMemberOption" value="TEST" style={styles.projectStatusOption}>TEST</option>
+									</select>
+									<button className="projectStatusSubmitNewTeamMember" style={styles.projectStatusSubmitNewTeamMember} key="projectStatusSubmitNewTeamMember">SUBMIT</button>
+								</div>
+								<button className="projectStatusButton" style={styles.projectStatusButton} onClick={this.addTeamMemberClick}>ADD TEAM MEMBER</button>
 							</div>
 
 						</div>
@@ -135,12 +144,66 @@ const styles={
 		width:'100%'
 	},
 	projectStatusArea:{
-		width:'30%'
+		width:'30%',
+		textAlign:'center'
 	},
 	projectStatusSecondaryTitle:{
 		color:'white',
 		fontFamily:'Fjalla One',
 		textAlign:'center'
+	},
+	projectStatusButton:{
+		backgroundColor:'darkblue',
+		fontSize:16,
+		fontFamily:'Rajdhani',
+		color:'white',
+		height:40,
+		width:180,
+		border:'none',
+		borderRadius:'3px',
+		marginBottom:10,
+		marginLeft:5,
+		marginRight:5,
+		':hover':{
+		  backgroundColor:'purple',
+		  color:'white'
+		},
+		':active':{
+		  backgroundColor:'white',
+		  color:'darkblue'
+		}
+	},
+	projectStatusNewTeamMemberSelectAndButton:{
+		opacity:'0.0'
+	},
+	projectStatusSelect:{
+		width:'80%',
+		marginTop:20,
+		fontFamily:'Pathway Gothic One',
+		fontSize:20,
+		marginBottom:20		
+	},
+	projectStatusOption:{
+		fontFamily:'Pathway Gothic One',
+		backgroundColor:'blue'
+	},
+	projectStatusSubmitNewTeamMember:{
+		
+		fontFamily:'Pathway Gothic One',
+		backgroundColor:'green',
+		color:'white',
+		border:'none',
+		marginLeft:10,
+		fontSize:20,
+		':hover':{
+			backgroundColor:'green',
+			color:'black'
+		},
+		':active':{
+			backgroundColor:'white',
+			color:'green'
+		}
+
 	},
     projectStatusButtonsContainer:{
 	    display:'flex',

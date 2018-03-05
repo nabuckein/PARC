@@ -43,11 +43,7 @@ class Projects extends Component {
   }
  
   componentWillMount=(e)=>{
-
-
     require("firebase/firestore");
-
-
     var db = firebase.firestore();
     var projectsNameArr = [];
     var projectsIDArr = [];
