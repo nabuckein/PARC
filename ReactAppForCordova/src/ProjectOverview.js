@@ -21,7 +21,7 @@ class ProjectOverview extends Component {
     return (
       <StyleRoot>
         <div className="projectOverviewContainer" style={styles.projectOverviewContainer} >
-          <nav key="projectOverview1" class="projectOverviewNav"  style={styles.projectOverviewNav} >
+          <nav key="projectOverview1" className="projectOverviewNav"  style={styles.projectOverviewNav} >
               <div style={styles.projectOverviewNavTitleDiv}>
                 <h1 style={styles.projectOverviewNavTitle} id={this.props.projectOverviewTitle} onClick={this.props.toProjectStatus}>{this.props.projectOverviewTitle}</h1>
               </div>

@@ -9,7 +9,8 @@ class ProjectStatus extends Component{
 	constructor(props){
 		super(props);
 		this.state={
-			teamMembers:[]
+			teamMembers:[],
+			teamMemberOptions:[]
 		}
 		
 	}
@@ -48,13 +49,25 @@ class ProjectStatus extends Component{
 			}).catch(err => {
 				console.log('Error getting document', err);
 			});
-			
+			var teamMemberOptions = [];
+			var db = firebase.firestore();
+			var dbRef = db.collection('users');
+			dbRef.get().then(snapshot => {
+				snapshot.forEach(doc => {
+					//console.log(doc.id, '=>', doc.data().firstName);
+					teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + doc.id} value="TEST" style={styles.projectStatusOption}>{doc.data().firstName + " " + doc.data().lastName}</option>)
+				});
+				this.setState({teamMemberOptions:teamMemberOptions});
+			})
+			.catch(err => {
+				console.log('Error getting documents', err);
+			});
 			
 			
 
 	}
 	componentDidMount=(e)=>{
-
+		
 	}
 
 	addTeamMemberClick=(e)=>{
@@ -63,7 +76,7 @@ class ProjectStatus extends Component{
 
 	render(){
 		
-		console.log(this.state.teamMembers.length);
+		//console.log(this.state.teamMembers.length);
 		if(this.state.teamMembers.length>=0){
 			/*teamMembersEls =[];
 			var ref =  this.state.teamMembers;
@@ -76,6 +89,9 @@ class ProjectStatus extends Component{
 			}
 				*/
 			//console.log(ref.firstName);
+			
+			
+			//{}
 			return(
 				<div>
 				<StyleRoot >
@@ -98,7 +114,7 @@ class ProjectStatus extends Component{
 								<p>{this.state.teamMembers[1]}</p>
 								<div id="addTeamMemberSelect" style={styles.projectStatusNewTeamMemberSelectAndButton}>
 									<select className="projectStatusAddTeamMemberSelect" style={styles.projectStatusSelect} placeholder="Add Team Member" key="projectStatusAddTeamMemberSelect" >
-										<option className="projectStatusAddTeamMemberOption" value="TEST" style={styles.projectStatusOption}>TEST</option>
+										{this.state.teamMemberOptions}
 									</select>
 									<button className="projectStatusSubmitNewTeamMember" style={styles.projectStatusSubmitNewTeamMember} key="projectStatusSubmitNewTeamMember">SUBMIT</button>
 								</div>
