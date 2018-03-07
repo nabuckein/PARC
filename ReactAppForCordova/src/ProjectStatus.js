@@ -17,11 +17,11 @@ class ProjectStatus extends Component{
 	componentWillMount=(e)=>{
 		require("firebase/firestore");
 		var db = firebase.firestore();
-		var cityRef = db.collection('projects').doc('09493C'); 
+		var colRef = db.collection('projects').doc('09493C'); 
 		var teamRef;
 		var that = this;
 		var teamMembersEls =[];
-		var getDoc = cityRef.get()
+		var getDoc = colRef.get()
 			.then(doc => {
 				if (!doc.exists) {
 					console.log('No such document!');
@@ -39,7 +39,7 @@ class ProjectStatus extends Component{
 				for(var n=0; n<=teamRef.length-1; n++){
 					teamRef[n].get().then(documentSnapshot => { //GET ENTIRE DOCUMENT IN THE REFERENCE
 						let data = documentSnapshot.data();
-						teamMembersEls.push(data.firstName);
+						teamMembersEls.push(data.firstName + " " + data.lastName);
 						//console.log(data.firstName);
 					}).then(err=>{
 						this.setState({teamMembers:teamMembersEls});
@@ -73,6 +73,9 @@ class ProjectStatus extends Component{
 	addTeamMemberClick=(e)=>{
 		document.getElementById('addTeamMemberSelect').style.opacity = '1.0';
 	}
+	cancelAddTeamMemberClick=(e)=>{
+		document.getElementById('addTeamMemberSelect').style.opacity = '0.0';
+	}
 
 	render(){
 		
@@ -89,7 +92,10 @@ class ProjectStatus extends Component{
 			}
 				*/
 			//console.log(ref.firstName);
-			
+			var teamMembersP = [];
+			for(var n=0; n<=this.state.teamMembers.length-1; n++){
+				teamMembersP.push(<p style={styles.projectStatusTeamMember}>{this.state.teamMembers[n]}</p>);
+			}
 			
 			//{}
 			return(
@@ -110,13 +116,14 @@ class ProjectStatus extends Component{
 
 							<div style={styles.projectStatusArea}>
 								<h2 style={styles.projectStatusSecondaryTitle}>Team</h2>
-								<p>{this.state.teamMembers[0]}</p>
-								<p>{this.state.teamMembers[1]}</p>
+								{teamMembersP}
 								<div id="addTeamMemberSelect" style={styles.projectStatusNewTeamMemberSelectAndButton}>
 									<select className="projectStatusAddTeamMemberSelect" style={styles.projectStatusSelect} placeholder="Add Team Member" key="projectStatusAddTeamMemberSelect" >
 										{this.state.teamMemberOptions}
 									</select>
-									<button className="projectStatusSubmitNewTeamMember" style={styles.projectStatusSubmitNewTeamMember} key="projectStatusSubmitNewTeamMember">SUBMIT</button>
+									<button className="projectStatusAddNewTeamMemberButton" style={styles.projectStatusAddNewTeamMemberButton} key="projectStatusAddNewTeamMemberButton">ADD</button>
+									<button onClick={this.cancelAddTeamMemberClick} className="projectStatusCancelAddNewTeamMemberButton" style={styles.projectStatusCancelAddNewTeamMemberButton} key="projectStatusCancelAddNewTeamMemberButton">CANCEL</button>
+
 								</div>
 								<button className="projectStatusButton" style={styles.projectStatusButton} onClick={this.addTeamMemberClick}>ADD TEAM MEMBER</button>
 							</div>
@@ -168,6 +175,10 @@ const styles={
 		fontFamily:'Fjalla One',
 		textAlign:'center'
 	},
+	projectStatusTeamMember:{
+		color:'white',
+		fontFamily:'Fjalla One'
+	},
 	projectStatusButton:{
 		backgroundColor:'darkblue',
 		fontSize:16,
@@ -193,7 +204,7 @@ const styles={
 		opacity:'0.0'
 	},
 	projectStatusSelect:{
-		width:'80%',
+		width:'50%',
 		marginTop:20,
 		fontFamily:'Pathway Gothic One',
 		fontSize:20,
@@ -201,9 +212,9 @@ const styles={
 	},
 	projectStatusOption:{
 		fontFamily:'Pathway Gothic One',
-		backgroundColor:'blue'
+		backgroundColor:'white'
 	},
-	projectStatusSubmitNewTeamMember:{
+	projectStatusAddNewTeamMemberButton:{
 		
 		fontFamily:'Pathway Gothic One',
 		backgroundColor:'green',
@@ -220,6 +231,22 @@ const styles={
 			color:'green'
 		}
 
+	},
+	projectStatusCancelAddNewTeamMemberButton:{
+		fontFamily:'Pathway Gothic One',
+		backgroundColor:'red',
+		color:'white',
+		border:'none',
+		marginLeft:10,
+		fontSize:20,
+		':hover':{
+			backgroundColor:'red',
+			color:'black'
+		},
+		':active':{
+			backgroundColor:'white',
+			color:'red'
+		}
 	},
     projectStatusButtonsContainer:{
 	    display:'flex',

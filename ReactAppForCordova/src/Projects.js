@@ -33,7 +33,6 @@ class Projects extends Component {
             console.log(doc.id, '=>', doc.data().projectName);
             projectsNameArr.push(doc.data().projectName);
             projectsIDArr.push(doc.id);
-
         });
         this.setState({projectsNameArr : projectsNameArr, projectsID: projectsIDArr});
     })
@@ -51,12 +50,11 @@ class Projects extends Component {
     db.collection('projects').get()
     .then((snapshot) => {
         snapshot.forEach((doc) => {
-            console.log(doc.id, '=>', doc.data().projectName);
+            //console.log(doc.id, '=>', doc.data().projectName);
             projectsNameArr.push(doc.data().projectName);
             projectsIDArr.push(doc.id);
-
         });
-        this.setState({projectsNameArr : projectsNameArr, projectsID: projectsIDArr});
+        this.setState({projectsNameArr: projectsNameArr, projectsID: projectsIDArr});
     })
     .catch((err) => {
         console.log('Error getting documents', err);
