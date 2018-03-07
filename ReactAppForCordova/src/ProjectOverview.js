@@ -23,7 +23,9 @@ class ProjectOverview extends Component {
         <div className="projectOverviewContainer" style={styles.projectOverviewContainer} >
           <nav key="projectOverview1" className="projectOverviewNav"  style={styles.projectOverviewNav} >
               <div style={styles.projectOverviewNavTitleDiv}>
-                <h1 style={styles.projectOverviewNavTitle} id={this.props.projectOverviewTitle} onClick={this.props.toProjectStatus}>{this.props.projectOverviewTitle}</h1>
+                <h1 style={styles.projectOverviewNavTitle} key="titleKey" id={this.props.projectOverviewTitle} >{this.props.projectOverviewTitle}</h1>
+                <h2 style={styles.projectOverviewNavTitle} key="idKey" id={this.props.projectID} onClick={this.props.toProjectStatus}>{this.props.projectID}</h2>
+              
               </div>
               <p key="project1PendingRedlines" style={styles.projectOverviewPendingRedlines}>X redlines need to be resolved</p>
               <p key="project1PendingParts" style={styles.projectOverviewPendingParts}>Y parts need to be ordered</p>

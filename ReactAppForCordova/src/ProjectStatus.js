@@ -9,62 +9,21 @@ class ProjectStatus extends Component{
 	constructor(props){
 		super(props);
 		this.state={
-			teamMembers:[],
+			teamMembers:this.props.team,
 			teamMemberOptions:[]
 		}
-		
+		this.teamMembersP = [];
 	}
 	componentWillMount=(e)=>{
-		require("firebase/firestore");
-		var db = firebase.firestore();
-		var colRef = db.collection('projects').doc('09493C'); 
-		var teamRef;
-		var that = this;
-		var teamMembersEls =[];
-		var getDoc = colRef.get()
-			.then(doc => {
-				if (!doc.exists) {
-					console.log('No such document!');
-				} else {
-					teamRef = doc.data().team;
-					//this.setState({teamMembers:teamRef});
-					/*
-					ref.get().then(documentSnapshot => { //GET ONLY FIRST NAME IN tHIs REFERENCE
-					if (documentSnapshot.exists) {
-						console.log(documentSnapshot.get('firstName'));
-					}
-					});*/
-				}
-			}).then(err=>{
-				for(var n=0; n<=teamRef.length-1; n++){
-					teamRef[n].get().then(documentSnapshot => { //GET ENTIRE DOCUMENT IN THE REFERENCE
-						let data = documentSnapshot.data();
-						teamMembersEls.push(data.firstName + " " + data.lastName);
-						//console.log(data.firstName);
-					}).then(err=>{
-						this.setState({teamMembers:teamMembersEls});
-					});
-				}
-				
-			}).catch(err => {
-				console.log('Error getting document', err);
-			});
-			var teamMemberOptions = [];
-			var db = firebase.firestore();
-			var dbRef = db.collection('users');
-			dbRef.get().then(snapshot => {
-				snapshot.forEach(doc => {
-					//console.log(doc.id, '=>', doc.data().firstName);
-					teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + doc.id} value="TEST" style={styles.projectStatusOption}>{doc.data().firstName + " " + doc.data().lastName}</option>)
-				});
-				this.setState({teamMemberOptions:teamMemberOptions});
-			})
-			.catch(err => {
-				console.log('Error getting documents', err);
-			});
+		//var teamMembersP= [];
+		for (var n=0; n<=this.state.teamMembers.length-1; n++){
+			var teamRef = this.state.teamMembers[n];
+			console.log(Object.keys(teamRef));
+		}
+		/*	
 			
-			
-
+		*/
+		
 	}
 	componentDidMount=(e)=>{
 		
@@ -79,23 +38,12 @@ class ProjectStatus extends Component{
 
 	render(){
 		
-		//console.log(this.state.teamMembers.length);
 		if(this.state.teamMembers.length>=0){
-			/*teamMembersEls =[];
-			var ref =  this.state.teamMembers;
-			for(var n=0; n<=ref.length-1; n++){
-				ref[n].get().then(documentSnapshot => { //GET ENTIRE DOCUMENT IN THE REFERENCE
-					let data = documentSnapshot.data();
-					teamMembersEls.push(<p>{data.firstName}</p>);
-					//console.log(data.firstName);
-				});
-			}
-				*/
-			//console.log(ref.firstName);
-			var teamMembersP = [];
-			for(var n=0; n<=this.state.teamMembers.length-1; n++){
-				teamMembersP.push(<p style={styles.projectStatusTeamMember}>{this.state.teamMembers[n]}</p>);
-			}
+			
+			
+			//for(var n=0; n<=this.state.teamMembers.length-1; n++){
+			//	teamMembersP.push(<p key={"keyTeamMember" + n} style={styles.projectStatusTeamMember}>{this.state.teamMembers[n]}</p>);
+			//}
 			
 			//{}
 			return(
@@ -116,7 +64,7 @@ class ProjectStatus extends Component{
 
 							<div style={styles.projectStatusArea}>
 								<h2 style={styles.projectStatusSecondaryTitle}>Team</h2>
-								{teamMembersP}
+								{this.teamMembersP}
 								<div id="addTeamMemberSelect" style={styles.projectStatusNewTeamMemberSelectAndButton}>
 									<select className="projectStatusAddTeamMemberSelect" style={styles.projectStatusSelect} placeholder="Add Team Member" key="projectStatusAddTeamMemberSelect" >
 										{this.state.teamMemberOptions}

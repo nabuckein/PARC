@@ -15,9 +15,11 @@ class Projects extends Component {
     super(props);
     this.state = {
       projectsNameArr: [],
-      projectsID: [],
+      projectsIDArr: [],
+      projectsUsersFullNameArr: [],
       componentToDisplay: this.props.componentToDisplay,
-      currentProject:'none'
+      currentProjectTitle:'none',
+      currentProjectTeamMembers:[]
     };
   }
 
@@ -26,6 +28,7 @@ class Projects extends Component {
     var db = firebase.firestore();
     var projectsNameArr = [];
     var projectsIDArr = [];
+    
     //ALL USERS CAN SEE ALL PROJECTS APPROACH
     db.collection('projects').get()
     .then((snapshot) => {
@@ -34,7 +37,7 @@ class Projects extends Component {
             projectsNameArr.push(doc.data().projectName);
             projectsIDArr.push(doc.id);
         });
-        this.setState({projectsNameArr : projectsNameArr, projectsID: projectsIDArr});
+        this.setState({projectsNameArr : projectsNameArr, projectsIDArr: projectsIDArr});
     })
     .catch((err) => {
         console.log('Error getting documents', err);
@@ -46,6 +49,7 @@ class Projects extends Component {
     var db = firebase.firestore();
     var projectsNameArr = [];
     var projectsIDArr = [];
+    var projectsUsersFullNameArr = [];
     //ALL USERS CAN SEE ALL PROJECTS APPROACH
     db.collection('projects').get()
     .then((snapshot) => {
@@ -53,8 +57,9 @@ class Projects extends Component {
             //console.log(doc.id, '=>', doc.data().projectName);
             projectsNameArr.push(doc.data().projectName);
             projectsIDArr.push(doc.id);
+            projectsUsersFullNameArr.push(doc.data().firstName + " " + doc.data().lastName);
         });
-        this.setState({projectsNameArr: projectsNameArr, projectsID: projectsIDArr});
+        this.setState({projectsNameArr: projectsNameArr, projectsIDArr: projectsIDArr, projectsUsersFullNameArr:projectsUsersFullNameArr});
     })
     .catch((err) => {
         console.log('Error getting documents', err);
@@ -97,20 +102,31 @@ class Projects extends Component {
     this.setState({componentToDisplay:'Projects'});
   }
   toProjectStatus=(e)=>{
-    console.log(e.target.id);
-    var title = 'projectTitle';
-    this.setState({componentToDisplay:"ProjectStatus", currentProject:e.target.id});
+    //console.log(e.target.id); 
+    require("firebase/firestore");   
+    var projectIDOfElementClicked = e.target.id;
+    //var projId = document.getElementById("projID").innerHTML;
+   // var projTitle = document.getElementById("projTitle").innerHTML;
+    var db = firebase.firestore();
+    var dbRef = db.collection('projects').doc(projectIDOfElementClicked);
+    dbRef.get().then(doc=>{
+      //console.log(projId);
+      this.setState({currentProjectTeamMembers: doc.data().team, componentToDisplay:"ProjectStatus", currentProjectTitle:"TEST"});
+    }).catch((err) => {
+      console.log('Error getting documents', err);
+    });
+    
   }
 
   render() {
-    console.log(this.props.currentUser.email);
+    //console.log(this.props.currentUser.email);
     
     var projects = [];
     var sidebar,newProject,projectStatus;
     if(this.state.componentToDisplay === 'Projects'){
       for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
         //PASS TO 'PROJECT OVERVIEW' COMPONENT THE METHOD handleProjectClick FROM 'APP VIA prop toProjectStatus
-        projects.push(<ProjectOverview toProjectStatus={this.toProjectStatus} key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsID[n]}/>);
+        projects.push(<ProjectOverview toProjectStatus={this.toProjectStatus} key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsIDArr[n]}/>);
       }
       sidebar = <Sidebar toNewProjects={this.handleAddNewProject}/>;
       
@@ -119,7 +135,7 @@ class Projects extends Component {
       newProject = <NewProject currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject} handleNewProjectSubmitButtonClick={this.handleNewProjectSubmitButtonClick}/>;
     }
     else if(this.state.componentToDisplay ==='ProjectStatus'){
-      projectStatus = <div style={styles.test}><ProjectStatus title={this.state.currentProject} currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
+      projectStatus = <div style={styles.test}><ProjectStatus team={this.state.currentProjectTeamMembers} title={this.state.currentProjectTitle}  currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
     }
     return (
       <StyleRoot>
