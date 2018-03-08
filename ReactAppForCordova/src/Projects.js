@@ -111,7 +111,7 @@ class Projects extends Component {
     var dbRef = db.collection('projects').doc(projectIDOfElementClicked);
     dbRef.get().then(doc=>{
       //console.log(projId);
-      this.setState({currentProjectTeamMembers: doc.data().team, componentToDisplay:"ProjectStatus", currentProjectTitle:"TEST"});
+      this.setState({currentProjectTeamMembers: doc.data().team, componentToDisplay:"ProjectStatus", currentProjectTitle:doc.data().projectNumber});
     }).catch((err) => {
       console.log('Error getting documents', err);
     });

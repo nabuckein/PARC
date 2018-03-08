@@ -15,22 +15,46 @@ class ProjectStatus extends Component{
 		this.teamMembersP = [];
 	}
 	componentWillMount=(e)=>{
-		//var teamMembersP= [];
-		for (var n=0; n<=this.state.teamMembers.length-1; n++){
-			var teamRef = this.state.teamMembers[n];
-			console.log(Object.keys(teamRef));
-		}
-		/*	
-			
-		*/
 		
+		for (var n=0; n<=this.state.teamMembers.length-1; n++){ //GET THE TEAM MEMBERS NAME AND PUT THEM IN teamMembers STATE (REPLACES THE PASSED DOWN FROM PROJECT VIA this.props.team)
+			var teamRef = this.state.teamMembers[n];
+			//console.log(Object.keys(teamRef));
+			teamRef.get().then(doc=>{
+				console.log(doc.data().firstName + " " + doc.data().lastName);
+				this.teamMembersP.push(doc.data().firstName + " " + doc.data().lastName);
+				this.setState({teamMembers:this.teamMembersP});
+			}).catch(err => {
+				console.log('Error getting documents, when trying to get team members names', err);
+			});
+		}
+
+		var teamMemberOptions = []; //GET NAMES OF ALL USERS TO POPULATE <option> TAGS FOR WHEN TRYING TO ADD A NEW MEMBER TO THE PROJECT
+		var db = firebase.firestore();
+		var dbRef = db.collection('users');
+		dbRef.get().then(snapshot => {
+			snapshot.forEach(doc => {
+				//console.log(doc.id, '=>', doc.data().firstName);
+				teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + doc.id} value="TEST" style={styles.projectStatusOption}>{doc.data().firstName + " " + doc.data().lastName}</option>)
+			});
+			this.setState({teamMemberOptions:teamMemberOptions});
+		})
+		.catch(err => {
+			console.log('Error getting documents, when trying to get names to go into <option> in <select> tag', err);
+		});
 	}
 	componentDidMount=(e)=>{
+		
+		
 		
 	}
 
 	addTeamMemberClick=(e)=>{
 		document.getElementById('addTeamMemberSelect').style.opacity = '1.0';
+	}
+	submitTeamMemberClick=(e)=>{
+		
+		document.getElementById('addTeamMemberSelect').style.opacity = '0.0';
+
 	}
 	cancelAddTeamMemberClick=(e)=>{
 		document.getElementById('addTeamMemberSelect').style.opacity = '0.0';
@@ -38,12 +62,14 @@ class ProjectStatus extends Component{
 
 	render(){
 		
-		if(this.state.teamMembers.length>=0){
+		if(this.state.teamMembers.length>=1){
 			
+			var teamMembersP=[];
 			
-			//for(var n=0; n<=this.state.teamMembers.length-1; n++){
-			//	teamMembersP.push(<p key={"keyTeamMember" + n} style={styles.projectStatusTeamMember}>{this.state.teamMembers[n]}</p>);
-			//}
+			for(var n=0; n<=this.state.teamMembers.length-1; n++){
+				teamMembersP.push(<p key={"keyTeamMember" + n} style={styles.projectStatusTeamMember}>{this.teamMembersP[n]}</p>);
+				console.log(teamMembersP);
+			}
 			
 			//{}
 			return(
@@ -64,12 +90,12 @@ class ProjectStatus extends Component{
 
 							<div style={styles.projectStatusArea}>
 								<h2 style={styles.projectStatusSecondaryTitle}>Team</h2>
-								{this.teamMembersP}
+								{teamMembersP}
 								<div id="addTeamMemberSelect" style={styles.projectStatusNewTeamMemberSelectAndButton}>
 									<select className="projectStatusAddTeamMemberSelect" style={styles.projectStatusSelect} placeholder="Add Team Member" key="projectStatusAddTeamMemberSelect" >
 										{this.state.teamMemberOptions}
 									</select>
-									<button className="projectStatusAddNewTeamMemberButton" style={styles.projectStatusAddNewTeamMemberButton} key="projectStatusAddNewTeamMemberButton">ADD</button>
+									<button onClick={this.submitTeamMemberClick} className="projectStatusAddNewTeamMemberButton" style={styles.projectStatusAddNewTeamMemberButton} key="projectStatusAddNewTeamMemberButton">ADD</button>
 									<button onClick={this.cancelAddTeamMemberClick} className="projectStatusCancelAddNewTeamMemberButton" style={styles.projectStatusCancelAddNewTeamMemberButton} key="projectStatusCancelAddNewTeamMemberButton">CANCEL</button>
 
 								</div>
