@@ -33,7 +33,6 @@ class Projects extends Component {
     db.collection('projects').get()
     .then((snapshot) => {
         snapshot.forEach((doc) => {
-            console.log(doc.id, '=>', doc.data().projectName);
             projectsNameArr.push(doc.data().projectName);
             projectsIDArr.push(doc.id);
         });
@@ -57,7 +56,7 @@ class Projects extends Component {
             //console.log(doc.id, '=>', doc.data().projectName);
             projectsNameArr.push(doc.data().projectName);
             projectsIDArr.push(doc.id);
-            projectsUsersFullNameArr.push(doc.data().firstName + " " + doc.data().lastName);
+            projectsUsersFullNameArr.push(doc.data().fullName);
         });
         this.setState({projectsNameArr: projectsNameArr, projectsIDArr: projectsIDArr, projectsUsersFullNameArr:projectsUsersFullNameArr});
     })

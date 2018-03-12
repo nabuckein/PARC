@@ -20,8 +20,8 @@ class ProjectStatus extends Component{
 			var teamRef = this.state.teamMembers[n];
 			//console.log(Object.keys(teamRef));
 			teamRef.get().then(doc=>{
-				console.log(doc.data().firstName + " " + doc.data().lastName);
-				this.teamMembersP.push(doc.data().firstName + " " + doc.data().lastName);
+				//console.log(doc.data().fullName);
+				this.teamMembersP.push(doc.data().fullName);
 				this.setState({teamMembers:this.teamMembersP});
 			}).catch(err => {
 				console.log('Error getting documents, when trying to get team members names', err);
@@ -33,8 +33,8 @@ class ProjectStatus extends Component{
 		var dbRef = db.collection('users');
 		dbRef.get().then(snapshot => {
 			snapshot.forEach(doc => {
-				//console.log(doc.id, '=>', doc.data().firstName);
-				teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + doc.id} value="TEST" style={styles.projectStatusOption}>{doc.data().firstName + " " + doc.data().lastName}</option>)
+					//console.log(doc.id, '=>', doc.data().firstName);
+				teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + doc.id} value={doc.data().fullName} style={styles.projectStatusOption}>{doc.data().fullName}</option>)
 			});
 			this.setState({teamMemberOptions:teamMemberOptions});
 		})
@@ -49,15 +49,18 @@ class ProjectStatus extends Component{
 	}
 
 	addTeamMemberClick=(e)=>{
-		document.getElementById('addTeamMemberSelect').style.opacity = '1.0';
+		var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex;
+		document.getElementById('addTeamMemberSelectDiv').style.opacity = '1.0';
+		//console.log(document.getElementsByTagName("option")[selectElIndex].value);
 	}
 	submitTeamMemberClick=(e)=>{
+		var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex;
+		console.log(document.getElementsByTagName("option")[selectElIndex].value);
+		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
 		
-		document.getElementById('addTeamMemberSelect').style.opacity = '0.0';
-
 	}
 	cancelAddTeamMemberClick=(e)=>{
-		document.getElementById('addTeamMemberSelect').style.opacity = '0.0';
+		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
 	}
 
 	render(){
@@ -68,7 +71,7 @@ class ProjectStatus extends Component{
 			
 			for(var n=0; n<=this.state.teamMembers.length-1; n++){
 				teamMembersP.push(<p key={"keyTeamMember" + n} style={styles.projectStatusTeamMember}>{this.teamMembersP[n]}</p>);
-				console.log(teamMembersP);
+				//console.log(teamMembersP);
 			}
 			
 			//{}
@@ -91,8 +94,8 @@ class ProjectStatus extends Component{
 							<div style={styles.projectStatusArea}>
 								<h2 style={styles.projectStatusSecondaryTitle}>Team</h2>
 								{teamMembersP}
-								<div id="addTeamMemberSelect" style={styles.projectStatusNewTeamMemberSelectAndButton}>
-									<select className="projectStatusAddTeamMemberSelect" style={styles.projectStatusSelect} placeholder="Add Team Member" key="projectStatusAddTeamMemberSelect" >
+								<div id="addTeamMemberSelectDiv" style={styles.projectStatusNewTeamMemberSelectAndButton}>
+									<select className="projectStatusAddTeamMemberSelect" id="addTeamMemberSelect" style={styles.projectStatusSelect} placeholder="Add Team Member" key="projectStatusAddTeamMemberSelect" >
 										{this.state.teamMemberOptions}
 									</select>
 									<button onClick={this.submitTeamMemberClick} className="projectStatusAddNewTeamMemberButton" style={styles.projectStatusAddNewTeamMemberButton} key="projectStatusAddNewTeamMemberButton">ADD</button>
