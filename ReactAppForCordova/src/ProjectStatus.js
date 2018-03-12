@@ -57,7 +57,22 @@ class ProjectStatus extends Component{
 		var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex;
 		console.log(document.getElementsByTagName("option")[selectElIndex].value);
 		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
-		
+		console.log("PROJECT NUMBER: " + this.props.title + " , PROJECT TEAM MEMBERS: " + this.props.team[0]);
+		var docId;
+		var projNumber = this.props.title;
+		var docRef = this.props.team[0];
+		/*docRef.get().then(doc=>{
+			console.log(doc.id) 	
+			docId = doc.id;
+		}).then(doc=>{
+			var db = firebase.firestore();
+			var ref = db.doc('projects/' + this.props.title);
+			ref.update({team:{0:'/users/' + docId}}).then(res=>{
+				console.log(res);
+			})
+		}).catch(err=>{
+			console.log(err);
+		});*/ 		
 	}
 	cancelAddTeamMemberClick=(e)=>{
 		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
@@ -73,7 +88,7 @@ class ProjectStatus extends Component{
 				teamMembersP.push(<p key={"keyTeamMember" + n} style={styles.projectStatusTeamMember}>{this.teamMembersP[n]}</p>);
 				//console.log(teamMembersP);
 			}
-			
+			console.log(this.props.team);
 			//{}
 			return(
 				<div>
