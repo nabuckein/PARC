@@ -13,24 +13,13 @@ class ProjectStatus extends Component{
 			teamMemberOptions:[]
 		}
 		this.teamMembersP = [];
+		this.db = firebase.firestore();
 	}
 	componentWillMount=(e)=>{
-		
-		for (var n=0; n<=this.state.teamMembers.length-1; n++){ //GET THE TEAM MEMBERS NAME AND PUT THEM IN teamMembers STATE (REPLACES THE PASSED DOWN FROM PROJECT VIA this.props.team)
-			var teamRef = this.state.teamMembers[n];
-			//console.log(Object.keys(teamRef));
-			teamRef.get().then(doc=>{
-				//console.log(doc.data().fullName);
-				this.teamMembersP.push(doc.data().fullName);
-				this.setState({teamMembers:this.teamMembersP});
-			}).catch(err => {
-				console.log('Error getting documents, when trying to get team members names', err);
-			});
-		}
 
-		var teamMemberOptions = []; //GET NAMES OF ALL USERS TO POPULATE <option> TAGS FOR WHEN TRYING TO ADD A NEW MEMBER TO THE PROJECT
-		var db = firebase.firestore();
-		var dbRef = db.collection('users');
+		var teamMemberOptions = [];
+		
+		var dbRef = this.db.collection('users');
 		dbRef.get().then(snapshot => {
 			snapshot.forEach(doc => {
 					//console.log(doc.id, '=>', doc.data().firstName);
@@ -41,38 +30,26 @@ class ProjectStatus extends Component{
 		.catch(err => {
 			console.log('Error getting documents, when trying to get names to go into <option> in <select> tag', err);
 		});
-	}
-	componentDidMount=(e)=>{
-		
-		
-		
-	}
 
+	}
 	addTeamMemberClick=(e)=>{
-		var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex;
+		//var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex;
 		document.getElementById('addTeamMemberSelectDiv').style.opacity = '1.0';
 		//console.log(document.getElementsByTagName("option")[selectElIndex].value);
 	}
 	submitTeamMemberClick=(e)=>{
-		var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex;
-		console.log(document.getElementsByTagName("option")[selectElIndex].value);
+		var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex; //GET THE INDEX OF OPTION CURRENTLY SELECTED
+		//console.log(document.getElementsByTagName("option")[selectElIndex].value); 
 		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
-		console.log("PROJECT NUMBER: " + this.props.title + " , PROJECT TEAM MEMBERS: " + this.props.team[0]);
-		var docId;
-		var projNumber = this.props.title;
-		var docRef = this.props.team[0];
-		/*docRef.get().then(doc=>{
-			console.log(doc.id) 	
-			docId = doc.id;
-		}).then(doc=>{
-			var db = firebase.firestore();
-			var ref = db.doc('projects/' + this.props.title);
-			ref.update({team:{0:'/users/' + docId}}).then(res=>{
-				console.log(res);
-			})
-		}).catch(err=>{
-			console.log(err);
-		});*/ 		
+		var nameToSubmit = 	document.getElementsByTagName("option")[selectElIndex].value;
+		var lengthOfTeam = this.props.team.length;
+		var arrayOfTeamMembers = this.props.team;
+		if(arrayOfTeamMembers[0]===""){
+			arrayOfTeamMembers.shift();
+		}
+		arrayOfTeamMembers.push(nameToSubmit);
+		this.db.collection('projects').doc(this.props.title).update({team:arrayOfTeamMembers});
+		
 	}
 	cancelAddTeamMemberClick=(e)=>{
 		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
@@ -80,16 +57,13 @@ class ProjectStatus extends Component{
 
 	render(){
 		
-		if(this.state.teamMembers.length>=1){
+		//if(this.props.team.length>=0){
 			
 			var teamMembersP=[];
 			
-			for(var n=0; n<=this.state.teamMembers.length-1; n++){
-				teamMembersP.push(<p key={"keyTeamMember" + n} style={styles.projectStatusTeamMember}>{this.teamMembersP[n]}</p>);
-				//console.log(teamMembersP);
-			}
-			console.log(this.props.team);
-			//{}
+			for(var n=0; n<=this.props.team.length-1; n++){
+				teamMembersP.push(<p key={"keyTeamMember" + n} style={styles.projectStatusTeamMember}>{this.props.team[n]}</p>);
+			}	
 			return(
 				<div>
 				<StyleRoot >
@@ -131,13 +105,8 @@ class ProjectStatus extends Component{
 				</StyleRoot>
 				</div>
 			)
-		}
-		else {
-		//teamMembersEls.push(<p key="loading">Loading</p>);
-			return (
-				null
-			)
-		}
+		//}
+		
 	}
 }
 

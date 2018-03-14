@@ -53,7 +53,6 @@ class Projects extends Component {
     db.collection('projects').get()
     .then((snapshot) => {
         snapshot.forEach((doc) => {
-            //console.log(doc.id, '=>', doc.data().projectName);
             projectsNameArr.push(doc.data().projectName);
             projectsIDArr.push(doc.id);
             projectsUsersFullNameArr.push(doc.data().fullName);
@@ -104,9 +103,7 @@ class Projects extends Component {
     //console.log(e.target.id); 
     require("firebase/firestore");   
     var projectIDOfElementClicked = e.target.id;
-    //var projId = document.getElementById("projID").innerHTML;
-   // var projTitle = document.getElementById("projTitle").innerHTML;
-    var db = firebase.firestore();
+     var db = firebase.firestore();
     var dbRef = db.collection('projects').doc(projectIDOfElementClicked);
     dbRef.get().then(doc=>{
       //console.log(projId);
@@ -118,17 +115,15 @@ class Projects extends Component {
   }
 
   render() {
-    //console.log(this.props.currentUser.email);
-    
     var projects = [];
     var sidebar,newProject,projectStatus;
+
     if(this.state.componentToDisplay === 'Projects'){
       for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
         //PASS TO 'PROJECT OVERVIEW' COMPONENT THE METHOD handleProjectClick FROM 'APP VIA prop toProjectStatus
         projects.push(<ProjectOverview toProjectStatus={this.toProjectStatus} key={"projectOverview"+n} reRenderAfterProjectDelete={this.projectDeletedRerender} projectOverviewTitle={this.state.projectsNameArr[n]} projectID={this.state.projectsIDArr[n]}/>);
       }
-      sidebar = <Sidebar toNewProjects={this.handleAddNewProject}/>;
-      
+      sidebar = <Sidebar toNewProjects={this.handleAddNewProject}/>;      
     }
     else if(this.state.componentToDisplay ==='NewProject'){
       newProject = <NewProject currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject} handleNewProjectSubmitButtonClick={this.handleNewProjectSubmitButtonClick}/>;
