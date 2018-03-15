@@ -42,14 +42,22 @@ class ProjectStatus extends Component{
 		//console.log(document.getElementsByTagName("option")[selectElIndex].value); 
 		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
 		var nameToSubmit = 	document.getElementsByTagName("option")[selectElIndex].value;
-		var lengthOfTeam = this.props.team.length;
-		var arrayOfTeamMembers = this.props.team;
+		var lengthOfTeam = this.state.teamMembers.length;
+		var arrayOfTeamMembers = this.state.teamMembers;
 		if(arrayOfTeamMembers[0]===""){
 			arrayOfTeamMembers.shift();
 		}
 		arrayOfTeamMembers.push(nameToSubmit);
 		this.db.collection('projects').doc(this.props.title).update({team:arrayOfTeamMembers});
-		
+		this.setState({teamMembers:arrayOfTeamMembers});
+	}
+	removeTeamMemberClick=(e)=>{		
+		var arrayOfTeamMembers = this.state.teamMembers;
+		var filteredArray = arrayOfTeamMembers.filter(el=>{
+			return el!==e.target.id
+		})
+		this.db.collection('projects').doc(this.props.title).update({team:filteredArray});
+		this.setState({teamMembers:filteredArray});
 	}
 	cancelAddTeamMemberClick=(e)=>{
 		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
@@ -61,8 +69,8 @@ class ProjectStatus extends Component{
 			
 			var teamMembersP=[];
 			
-			for(var n=0; n<=this.props.team.length-1; n++){
-				teamMembersP.push(<p key={"keyTeamMember" + n} style={styles.projectStatusTeamMember}>{this.props.team[n]}</p>);
+			for(var n=0; n<=this.state.teamMembers.length-1; n++){
+				teamMembersP.push(<div key={"keyTeamMemberDiv" + n} style={styles.projectStatusTeamMemberDiv}><label key={"keyTeamMember" + n} style={styles.projectStatusTeamMember} value={this.state.teamMembers[n]}>{this.state.teamMembers[n]}</label><button id={this.state.teamMembers[n]} key={"keyTeamMemberButton" + n} onClick={this.removeTeamMemberClick} style={styles.projectStatusRemoveTeamMemberButton}>REMOVE</button></div>);
 			}	
 			return(
 				<div>
@@ -136,9 +144,16 @@ const styles={
 		fontFamily:'Fjalla One',
 		textAlign:'center'
 	},
+	projectStatusTeamMemberDiv:{
+		marginBottom:10,
+		display:'flex',
+		justifyContent:'center'
+	},
 	projectStatusTeamMember:{
 		color:'white',
-		fontFamily:'Fjalla One'
+		fontFamily:'Fjalla One',
+		width:'50%'
+		
 	},
 	projectStatusButton:{
 		backgroundColor:'darkblue',
@@ -209,10 +224,25 @@ const styles={
 			color:'red'
 		}
 	},
+	projectStatusRemoveTeamMemberButton:{
+		fontSize:20,
+		backgroundColor:'orange',
+		color:'white',
+		border:'none',
+		fontFamily:'Pathway Gothic One',
+		marginLeft:10,
+		':hover':{
+			backgroundColor:'red',
+			color:'black'
+		},
+		':active':{
+			backgroundColor:'white',
+			color:'red'
+		}
+	},
     projectStatusButtonsContainer:{
 	    display:'flex',
-	    justifyContent:'center',
-
+	    justifyContent:'center'
 	},	
 	projectStatusButtonCancel:{
 	    backgroundColor:'white',
