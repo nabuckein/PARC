@@ -62,7 +62,9 @@ class ProjectStatus extends Component{
 	cancelAddTeamMemberClick=(e)=>{
 		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
 	}
+	emailTeamMemberClick=(e)=>{
 
+	}
 	render(){
 		
 		//if(this.props.team.length>=0){
@@ -70,7 +72,11 @@ class ProjectStatus extends Component{
 			var teamMembersP=[];
 			
 			for(var n=0; n<=this.state.teamMembers.length-1; n++){
-				teamMembersP.push(<div key={"keyTeamMemberDiv" + n} style={styles.projectStatusTeamMemberDiv}><label key={"keyTeamMember" + n} style={styles.projectStatusTeamMember} value={this.state.teamMembers[n]}>{this.state.teamMembers[n]}</label><button id={this.state.teamMembers[n]} key={"keyTeamMemberButton" + n} onClick={this.removeTeamMemberClick} style={styles.projectStatusRemoveTeamMemberButton}>REMOVE</button></div>);
+				teamMembersP.push(<div key={"keyTeamMemberDiv" + n} style={styles.projectStatusTeamMemberDiv}>
+				<label key={"keyTeamMember" + n} style={styles.projectStatusTeamMember} value={this.state.teamMembers[n]}>{this.state.teamMembers[n]}</label>
+				<button id={this.state.teamMembers[n]} key={"keyTeamMemberButton" + n} onClick={this.removeTeamMemberClick} style={styles.projectStatusRemoveTeamMemberButton}>X</button>
+				<button key={"keyTeamMemberEmailButton" + n} onClick={this.emailTeamMemberClick} style={styles.projectStatusEmailTeamMemberButton}>NOTIFY</button>
+				</div>);
 			}	
 			return(
 				<div>
@@ -238,6 +244,22 @@ const styles={
 		':active':{
 			backgroundColor:'white',
 			color:'red'
+		}
+	},
+	projectStatusEmailTeamMemberButton:{
+		fontSize:20,
+		backgroundColor:'gray',
+		color:'white',
+		border:'none',
+		fontFamily:'Pathway Gothic One',
+		marginLeft:10,
+		':hover':{
+			backgroundColor:'darkblue',
+			color:'white'
+		},
+		':active':{
+			backgroundColor:'white',
+			color:'black'
 		}
 	},
     projectStatusButtonsContainer:{
