@@ -19,13 +19,35 @@ class ProjectStatus extends Component{
 
 		var teamMemberOptions = [];
 		
+		
+		
 		var dbRef = this.db.collection('users');
 		dbRef.get().then(snapshot => {
+			var teamMemberArr = []; //GET ARRAY OF TEAM MEMBERS DISPLAYED IN LABEL COMPONENT
+			var teamMemberArrClass = document.getElementsByClassName('projectStatusTeamMember'); 
+			for(var n=0; n<=teamMemberArrClass.length-1; n++){
+				//console.log(teamMemberArr[n].innerHTML);
+				teamMemberArr.push(teamMemberArrClass[n].innerHTML)
+			}
 			snapshot.forEach(doc => {
 					//console.log(doc.id, '=>', doc.data().firstName);
-				teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + doc.id} value={doc.data().fullName} style={styles.projectStatusOption}>{doc.data().fullName}</option>)
+				if(!teamMemberArr.includes(doc.data().fullName)){
+					teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + doc.id} value={doc.data().fullName} style={styles.projectStatusOption}>{doc.data().fullName}</option>)
+				}
 			});
+			if(teamMemberOptions.length===0){
+				teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + snapshot.id} value="N/A" style={styles.projectStatusOption}> - </option>)
+			}
 			this.setState({teamMemberOptions:teamMemberOptions});
+			/*for(var n=0; n<=snapshot.length-1; n++){
+				if(!teamMemberArr.includes(snapshot.data().fullName)){
+					teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + snapshot.id} value={snapshot.data().fullName} style={styles.projectStatusOption}>{snapshot.data().fullName}</option>)
+				}else{
+					teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + snapshot.id} value="N/A" style={styles.projectStatusOption}> N/A </option>)
+				}
+			}*/
+			//console.log(teamMemberOptions);
+			
 		})
 		.catch(err => {
 			console.log('Error getting documents, when trying to get names to go into <option> in <select> tag', err);
@@ -65,6 +87,7 @@ class ProjectStatus extends Component{
 	emailTeamMemberClick=(e)=>{
 
 	}
+
 	render(){
 		
 		//if(this.props.team.length>=0){
@@ -73,7 +96,7 @@ class ProjectStatus extends Component{
 			
 			for(var n=0; n<=this.state.teamMembers.length-1; n++){
 				teamMembersP.push(<div key={"keyTeamMemberDiv" + n} style={styles.projectStatusTeamMemberDiv}>
-				<label key={"keyTeamMember" + n} style={styles.projectStatusTeamMember} value={this.state.teamMembers[n]}>{this.state.teamMembers[n]}</label>
+				<label key={"keyTeamMember" + n} className="projectStatusTeamMember" style={styles.projectStatusTeamMember} value={this.state.teamMembers[n]}>{this.state.teamMembers[n]}</label>
 				<button id={this.state.teamMembers[n]} key={"keyTeamMemberButton" + n} onClick={this.removeTeamMemberClick} style={styles.projectStatusRemoveTeamMemberButton}>X</button>
 				<button key={"keyTeamMemberEmailButton" + n} onClick={this.emailTeamMemberClick} style={styles.projectStatusEmailTeamMemberButton}>NOTIFY</button>
 				</div>);
