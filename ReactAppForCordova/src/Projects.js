@@ -5,6 +5,7 @@ import ProjectOverview from './ProjectOverview.js';
 import Sidebar from './Sidebar.js';
 import NewProject from './NewProject.js';
 import ProjectStatus from './ProjectStatus.js';
+import Message from './Message.js';
 
 const firebase = require("firebase");
     // Required for side-effects
@@ -19,7 +20,9 @@ class Projects extends Component {
       projectsUsersFullNameArr: [],
       componentToDisplay: this.props.componentToDisplay,
       currentProjectTitle:'none',
-      currentProjectTeamMembers:[]
+      currentProjectNumber:0,
+      currentProjectTeamMembers:[],
+      messageUser:'none'
     };
   }
 
@@ -49,6 +52,7 @@ class Projects extends Component {
     var projectsNameArr = [];
     var projectsIDArr = [];
     var projectsUsersFullNameArr = [];
+    console.log(this.props.currentUser.email);
     //ALL USERS CAN SEE ALL PROJECTS APPROACH
     db.collection('projects').get()
     .then((snapshot) => {
@@ -103,20 +107,27 @@ class Projects extends Component {
     //console.log(e.target.id); 
     require("firebase/firestore");   
     var projectIDOfElementClicked = e.target.id;
-     var db = firebase.firestore();
+    var db = firebase.firestore();
     var dbRef = db.collection('projects').doc(projectIDOfElementClicked);
     dbRef.get().then(doc=>{
-      //console.log(projId);
-      this.setState({currentProjectTeamMembers: doc.data().team, componentToDisplay:"ProjectStatus", currentProjectTitle:doc.data().projectNumber});
+      this.setState({currentProjectTeamMembers: doc.data().team, componentToDisplay:"ProjectStatus", currentProjectNumber:doc.data().projectNumber, currentProjectTitle:doc.data().projectName});
     }).catch((err) => {
       console.log('Error getting documents', err);
     });
     
   }
+  toMessage=(e)=>{
+    console.log("MESSAGE button clicked!");
+    var parentEl = e.target.parentNode
+		var label = parentEl.getElementsByTagName('label');
+		console.log(label[0].innerHTML);
+    var x = e.target.id;
+    this.setState({componentToDisplay: "Message", messageUser:label[0].innerHTML});
+  }
 
   render() {
     var projects = [];
-    var sidebar,newProject,projectStatus;
+    var sidebar, newProject, projectStatus, message;
 
     if(this.state.componentToDisplay === 'Projects'){
       for(var n=0; n<=this.state.projectsNameArr.length-1; n++){
@@ -129,7 +140,10 @@ class Projects extends Component {
       newProject = <NewProject currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject} handleNewProjectSubmitButtonClick={this.handleNewProjectSubmitButtonClick}/>;
     }
     else if(this.state.componentToDisplay ==='ProjectStatus'){
-      projectStatus = <div style={styles.test}><ProjectStatus team={this.state.currentProjectTeamMembers} title={this.state.currentProjectTitle}  currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
+      projectStatus = <div style={styles.test}><ProjectStatus toMessage={this.toMessage} team={this.state.currentProjectTeamMembers} number={this.state.currentProjectNumber} title={this.state.currentProjectTitle}  currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
+    }
+    else if(this.state.componentToDisplay ==='Message'){
+      message = <div style={styles.messageDiv}><Message title={this.state.currentProjectTitle} number={this.state.currentProjectNumber} currentUser={this.state.messageUser} messageFrom={this.state.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
     }
     return (
       <StyleRoot>
@@ -142,6 +156,7 @@ class Projects extends Component {
             {sidebar}
             {newProject}
             {projectStatus}
+            {message}
           </div>
           
         </div>
@@ -172,6 +187,9 @@ const styles = {
     marginBottom:100
   },
   test:{
+    width:'100%'
+  },
+  messageDiv:{
     width:'100%'
   }
   

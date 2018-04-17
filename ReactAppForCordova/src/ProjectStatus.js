@@ -15,22 +15,16 @@ class ProjectStatus extends Component{
 		this.teamMembersP = [];
 		this.db = firebase.firestore();
 	}
-	componentWillMount=(e)=>{
-
+	updateAddMemberOptions=(e)=>{
 		var teamMemberOptions = [];
-		
-		
-		
 		var dbRef = this.db.collection('users');
 		dbRef.get().then(snapshot => {
 			var teamMemberArr = []; //GET ARRAY OF TEAM MEMBERS DISPLAYED IN LABEL COMPONENT
 			var teamMemberArrClass = document.getElementsByClassName('projectStatusTeamMember'); 
 			for(var n=0; n<=teamMemberArrClass.length-1; n++){
-				//console.log(teamMemberArr[n].innerHTML);
 				teamMemberArr.push(teamMemberArrClass[n].innerHTML)
 			}
 			snapshot.forEach(doc => {
-					//console.log(doc.id, '=>', doc.data().firstName);
 				if(!teamMemberArr.includes(doc.data().fullName)){
 					teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + doc.id} value={doc.data().fullName} style={styles.projectStatusOption}>{doc.data().fullName}</option>)
 				}
@@ -39,66 +33,107 @@ class ProjectStatus extends Component{
 				teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + snapshot.id} value="N/A" style={styles.projectStatusOption}> - </option>)
 			}
 			this.setState({teamMemberOptions:teamMemberOptions});
-			/*for(var n=0; n<=snapshot.length-1; n++){
-				if(!teamMemberArr.includes(snapshot.data().fullName)){
-					teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + snapshot.id} value={snapshot.data().fullName} style={styles.projectStatusOption}>{snapshot.data().fullName}</option>)
-				}else{
-					teamMemberOptions.push(<option className="projectStatusAddTeamMemberOption" key={"key" + snapshot.id} value="N/A" style={styles.projectStatusOption}> N/A </option>)
-				}
-			}*/
-			//console.log(teamMemberOptions);
-			
+				
 		})
 		.catch(err => {
 			console.log('Error getting documents, when trying to get names to go into <option> in <select> tag', err);
 		});
+	}
+	componentWillMount=(e)=>{
+		
+		this.updateAddMemberOptions();
 
 	}
 	addTeamMemberClick=(e)=>{
-		//var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex;
-		document.getElementById('addTeamMemberSelectDiv').style.opacity = '1.0';
-		//console.log(document.getElementsByTagName("option")[selectElIndex].value);
+		document.getElementById('addTeamMemberSelectDiv').style.visibility = 'visible'; //SHOW <select> ELEMENT WHEN "ADD TEAM MEMBER"
+		//BUTTON IS CLICKED
 	}
 	submitTeamMemberClick=(e)=>{
+		//WHEN THE CURRENT USER CLICKS "ADD" BUTTON NEXT TO THE <select> ELEMENT TO ADD A UER TO A PROJECT,
+		//WE NEED TO DO THE FOLLOWING TO UPDATE THE THIS COMPONENT AND THE BACKEND AS WELL.
+
 		var selectElIndex = document.getElementById("addTeamMemberSelect").selectedIndex; //GET THE INDEX OF OPTION CURRENTLY SELECTED
-		//console.log(document.getElementsByTagName("option")[selectElIndex].value); 
-		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
-		var nameToSubmit = 	document.getElementsByTagName("option")[selectElIndex].value;
-		var lengthOfTeam = this.state.teamMembers.length;
-		var arrayOfTeamMembers = this.state.teamMembers;
-		if(arrayOfTeamMembers[0]===""){
+		document.getElementById('addTeamMemberSelectDiv').style.visibility = 'hidden'; //HIDE THE <select> ELEMENT FOR ADDING
+		//A NEW USER TO THE PROJECT WHEN THE "ADD" BUTTON NEXT TO THE NAME OF THE USER IS CLICKED
+		var nameToSubmit = 	document.getElementsByTagName("option")[selectElIndex].value; //nameToSubmit WILL NOW HAVE THE NAME
+		//OF THE CURRENTLY SELECTED USER
+		var arrayOfTeamMembers = this.state.teamMembers; //THIS VARIABLE WILL NOW HAVE THE ARRAY OF TEAM MEMBERS CURRENTLY IN THIS
+		//COMPONENT. THIS IS USED TO DISPLAY THEM IN THE "TEAM" AREA OF THE COMPONENT
+
+		if(arrayOfTeamMembers[0]===""){// WE DO THIS TO REMOVE THE FIRST ELEMENT IN THE ARRAY IF THE THE PROJECT HAS NO 
+			//TEAM MEMBERS YET (THIS IS PASSED AS props FROM THE "PROJECTS" COMPONENT.
 			arrayOfTeamMembers.shift();
 		}
 		arrayOfTeamMembers.push(nameToSubmit);
-		this.db.collection('projects').doc(this.props.title).update({team:arrayOfTeamMembers});
+
+		//NOW WE CAN UPDATE THE FIREBASE BACKEND WITH THE APPROPIATE TEAM MEMBERS
+		this.db.collection('projects').doc(this.props.number).update({team:arrayOfTeamMembers});
 		this.setState({teamMembers:arrayOfTeamMembers});
+		/*--------------------------------------------------------------------------------------------------//
+		//NOW WE NEED TO SETUP A messages FIELD IN THE USER ADDED TO THIS PROJECT IN FIREBASE
+		var allUsers = this.db.collection('users'); //GET ALL USERS IN FIREBASE
+		var dataObj = {	//CREATE OBJECT THAT WILL SET UP THE MESSAGES FIELD IN THE USER ADDED TO THE PROJECT
+				projectNumber:this.props.number,		
+				date:0,
+				messageFrom:'init',
+				replied:false,
+				resolved:false,
+				messageText:'init'				
+		}
+		//CREATE NESTED OBJECT THAT WILL CONTAIN THE OBJECT CREATED ABOVE, NEED TO DO IT
+		//THIS WAY TO AVOID ERRORS WHEN UPDATING IN FIREBASE. IT WILL THROW A 
+		//DocumentReference.update() ERROR OTHERWISE
+		var initialObjInFB = { 
+			messages:[dataObj]			
+		}		
+		
+
+		allUsers.get()
+		.then(snapshot=>{
+			snapshot.forEach(doc=>{
+				
+				//IF THE FULL NAME IN FIREBASE MATCHES THE CURRENTLY SELECTED NAME IN THE DROPDOWN <select> TAG
+				//AND THE USER CURRENTLY DOES NOT HAVE AN ASSIGNED PROJECT, CREATE A message FIELD IN FIREBASE
+				if(doc.data().fullName === nameToSubmit && typeof doc.data().messages === 'undefined'){
+					allUsers.doc(doc.id).update(initialObjInFB);
+				//IF THE USER HAS PREVIOUSLY BEEN ASSIGNED A PROJECT, THEN GET THE CURRENT message FIELD IN FIREBASE
+				//AND UPDATE IT.
+				}else if (doc.data().fullName === nameToSubmit){
+					var currentMessages = doc.data().messages;				
+					currentMessages.push(dataObj);					
+					allUsers.doc(doc.id).update({messages:currentMessages});
+				}
+			})
+		})
+		.catch(err => {
+            console.log('Error getting documents', err);
+		});
+		
+		this.updateAddMemberOptions();
+		
+		*/
 	}
 	removeTeamMemberClick=(e)=>{		
 		var arrayOfTeamMembers = this.state.teamMembers;
 		var filteredArray = arrayOfTeamMembers.filter(el=>{
 			return el!==e.target.id
 		})
-		this.db.collection('projects').doc(this.props.title).update({team:filteredArray});
+		this.db.collection('projects').doc(this.props.number).update({team:filteredArray});
 		this.setState({teamMembers:filteredArray});
+		this.updateAddMemberOptions();
 	}
 	cancelAddTeamMemberClick=(e)=>{
-		document.getElementById('addTeamMemberSelectDiv').style.opacity = '0.0';
-	}
-	emailTeamMemberClick=(e)=>{
-
+		document.getElementById('addTeamMemberSelectDiv').style.visibility = 'hidden';;
 	}
 
 	render(){
-		
 		//if(this.props.team.length>=0){
-			
-			var teamMembersP=[];
-			
+			var teamMembersP=[];			
 			for(var n=0; n<=this.state.teamMembers.length-1; n++){
 				teamMembersP.push(<div key={"keyTeamMemberDiv" + n} style={styles.projectStatusTeamMemberDiv}>
 				<label key={"keyTeamMember" + n} className="projectStatusTeamMember" style={styles.projectStatusTeamMember} value={this.state.teamMembers[n]}>{this.state.teamMembers[n]}</label>
 				<button id={this.state.teamMembers[n]} key={"keyTeamMemberButton" + n} onClick={this.removeTeamMemberClick} style={styles.projectStatusRemoveTeamMemberButton}>X</button>
-				<button key={"keyTeamMemberEmailButton" + n} onClick={this.emailTeamMemberClick} style={styles.projectStatusEmailTeamMemberButton}>NOTIFY</button>
+				<button id="test" key={"keyTeamMemberEmailButton" + n} onClick={this.props.toMessage} style={styles.projectStatusMessageTeamMemberButton}>MESSAGE</button>
 				</div>);
 			}	
 			return(
@@ -106,6 +141,7 @@ class ProjectStatus extends Component{
 				<StyleRoot >
 					<div className="ProjectStatus" style={styles.ProjectStatus}>
 						<h1 style={styles.title}>{this.props.title}</h1>
+						<h1 style={styles.title}>{this.props.number}</h1>
 						
 						<div className="projectStatusAreaContainer" style={styles.projectStatusAreaContainer}>
 
@@ -206,7 +242,7 @@ const styles={
 		}
 	},
 	projectStatusNewTeamMemberSelectAndButton:{
-		opacity:'0.0'
+		visibility:'hidden'
 	},
 	projectStatusSelect:{
 		width:'50%',
@@ -269,7 +305,7 @@ const styles={
 			color:'red'
 		}
 	},
-	projectStatusEmailTeamMemberButton:{
+	projectStatusMessageTeamMemberButton:{
 		fontSize:20,
 		backgroundColor:'gray',
 		color:'white',

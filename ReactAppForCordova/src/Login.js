@@ -39,7 +39,7 @@ class Login extends Component {
           </div>
           <div className="loginButtonsContainer" style={styles.loginButtonsContainer}>
             <button className="loginButtonSubmit" key="loginButtonSubmit" style={styles.loginButtonSubmit} onClick={this.handleSubmitButtonClick}>SUBMIT</button>
-            {/*<button className="loginButtonCancel" key="loginButtonCancel" style={styles.loginButtonCancel}>CANCEL</button>*/}
+            <button className="loginButtonCancel" key="loginButtonCancel" style={styles.loginButtonCancel} onClick={this.props.handleCancelLoginClick}>CANCEL</button>
           </div>
           
         </div>

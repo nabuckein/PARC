@@ -4,6 +4,8 @@ import Login from './Login.js';
 import Sidebar from './Sidebar.js';
 import NewProject from './NewProject.js';
 import ProjectStatus from './ProjectStatus.js';
+import LoginOrSignup from './LoginOrSignup.js';
+import Signup from './Signup.js';
 import Radium from 'radium';
 import {StyleRoot} from 'radium';
 
@@ -35,8 +37,9 @@ class App extends Component {
     firebase.auth().onAuthStateChanged((user)=> {
       if (user) {
         // User is signed in.
-        console.log("%cCURRENT USER'S E-MAIL: " + user.email, "background: blue; color:white");        
-        this.setState({currentUser:user});
+        console.log("%cCURRENT USER'S E-MAIL: " + user.email, "background: blue; color:white");
+        console.log("%cCURRENT USER'S DISPLAY NAME: " + user.displayName, "background: orange; color:black");        
+        this.setState({currentUser:user, componentToDisplay: "Projects"});
       } 
       else {
         // No user is signed in.
@@ -51,8 +54,19 @@ class App extends Component {
   handleCancelNewProject=(e)=>{ //METHOD TO SWITCH SCREEN TO 'PROJECTS' SCREEN
     this.setState({componentToDisplay:"Projects"});
   }
+  handleCancelLoginClick=(e)=>{
+    this.setState({componentToDisplay:"LoginOrSignup"});
+  }
+  handleCancelSignupClick=(e)=>{
+    this.setState({componentToDisplay:"LoginOrSignup"});
+  }
+  toLogin=(e)=>{
+    this.setState({componentToDisplay:"Login"});
+  }
+  toSignup=(e)=>{
+    this.setState({componentToDisplay:"Signup"});
+  }
 
-  
   render() {
     if (this.state.currentUser!== null && this.state.componentToDisplay === "Projects"){      
       return (
@@ -69,14 +83,30 @@ class App extends Component {
       );
     }
 
-    
-    
-
-    else{      
+    else if(this.state.currentUser=== null && this.state.componentToDisplay === "Login"){
       return(
         <div className="App" style={styles.appContainer}> 
           <div className="projectsContainer">
-            <Login/>
+            <Login handleCancelLoginClick={this.handleCancelLoginClick}/>
+          </div>
+        </div>
+      );
+    }
+    else if(this.state.currentUser=== null && this.state.componentToDisplay === "Signup"){
+      return(
+        <div className="App" style={styles.appContainer}> 
+          <div className="projectsContainer">
+            <Signup handleCancelSignupClick={this.handleCancelSignupClick}/>
+          </div>
+        </div>
+      );
+    }
+
+    else if(this.state.currentUser=== null){ //IF I ADD this.state.componentToDisplay === "LoginOrSignup" IT GIVES ME AN ERROR      
+      return(
+        <div className="App" style={styles.appContainer}> 
+          <div className="projectsContainer">
+            <LoginOrSignup toLogin={this.toLogin} toSignup={this.toSignup}/>
           </div>
         </div>
       );
