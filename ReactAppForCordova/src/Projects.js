@@ -143,7 +143,7 @@ class Projects extends Component {
       projectStatus = <div style={styles.test}><ProjectStatus toMessage={this.toMessage} team={this.state.currentProjectTeamMembers} number={this.state.currentProjectNumber} title={this.state.currentProjectTitle}  currentUser={this.state.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
     }
     else if(this.state.componentToDisplay ==='Message'){
-      message = <div style={styles.messageDiv}><Message title={this.state.currentProjectTitle} number={this.state.currentProjectNumber} currentUser={this.state.messageUser} messageFrom={this.state.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
+      message = <div style={styles.messageDiv}><Message title={this.state.currentProjectTitle} number={this.state.currentProjectNumber} currentUser={this.state.messageUser} messageFrom={this.props.currentUser} backToProjects={this.handleCancelNewProject}/></div>;
     }
     return (
       <StyleRoot>

@@ -27,8 +27,8 @@ class LoginOrSignup extends Component{
 export default LoginOrSignup;
 var pulseKeyframes = Radium.keyframes({
     '0%': {color: 'white'},
-    
-    '100%': {color: 'red'},
+    '50%': {color: 'gray'},
+    '100%': {color: 'white'},
   }, 'pulse');
 
 const styles={
@@ -51,15 +51,15 @@ const styles={
         width:'100%',
         fontFamily:'Pathway Gothic One',
         fontSize:80,
-        marginBottom:0,
-        animation:'1.5s ease 0s forwards',
-        animationName:pulseKeyframes
+        marginBottom:0
     },
     title2:{
         color:'white',
         width:'100%',
         fontFamily:'Pathway Gothic One',
-        fontSize:30
+        fontSize:30,
+        animation:'1.5s 0s infinite',
+        animationName:pulseKeyframes
     },
     buttonsDiv:{
         width:'100%',

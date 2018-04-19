@@ -11,21 +11,13 @@ class Signup extends Component {
     var emailInput = document.getElementById('signupEmailInput');
     var passwordInput = document.getElementById('signupPasswordInput');
     var userIdInput = document.getElementById('signupUserIDInput');
+    var displayName = firstNameInput.value + " " + lastNameInput.value;
     firebase.auth().createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
     .then(function(user){
       console.log(user);  
       user.updateProfile({
-        displayName: "Jane Q. User"
-      }).then(function() {
-        // Profile updated successfully!
-        // "Jane Q. User"
-        var displayName = user.displayName;
-        // "https://example.com/jane-q-user/profile.jpg"
-        var photoURL = user.photoURL;
-      }, function(error) {
-        // An error happened.
-        console.log(error);
-      });
+        displayName: displayName
+      })
       
     },function(error){
       // Handle Errors here.

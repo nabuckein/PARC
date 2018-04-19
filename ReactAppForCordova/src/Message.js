@@ -24,12 +24,13 @@ class Message extends Component{
         var date = curHour + curMins + curSecs;
         console.log(dateObj);
         var allUsers = this.db.collection('users'); //GET ALL USERS IN FIREBASE
-        var messageFrom = this.props.currentUser;
+        var messageFrom = this.props.messageFrom;
         var messageInput = document.getElementById('messageInput');
 		var dataObj = {	//CREATE OBJECT THAT WILL SET UP THE MESSAGES FIELD IN THE USER ADDED TO THE PROJECT
 				projectNumber:this.props.number,		
 				date:dateObj,
-				messageFrom:messageFrom,
+                messageFromDisplayName:messageFrom.displayName,
+                messageFromEmail:messageFrom.email,
 				replied:false,
 				resolved:false,
 				messageText:messageInput.value				
