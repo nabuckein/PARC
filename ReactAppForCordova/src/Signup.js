@@ -1,23 +1,35 @@
 import React, { Component } from 'react';
 import Radium from 'radium';
 import {StyleRoot} from 'radium';
+import 'firebase/firestore'
 const firebase = require("firebase");
 
 class Signup extends Component {
-
+  
   handleSubmitButtonClick=(e)=>{
     var firstNameInput = document.getElementById('signupFirstNameInput');
     var lastNameInput = document.getElementById('signupLastNameInput');
     var emailInput = document.getElementById('signupEmailInput');
     var passwordInput = document.getElementById('signupPasswordInput');
-    var userIdInput = document.getElementById('signupUserIDInput');
+    var titleSelect = document.getElementById('signupTitleSelect');
+    //var userIdInput = document.getElementById('signupUserIDInput');
     var displayName = firstNameInput.value + " " + lastNameInput.value;
+    var usersData = {
+      firstName:firstNameInput.value,
+      lastName:lastNameInput.value,
+      fullName:displayName,
+      email:emailInput.value,
+      //userID:userIdInput.value,
+      userTitle:titleSelect.value
+    }
+    var db = firebase.firestore();
     firebase.auth().createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
     .then(function(user){
       console.log(user);  
       user.updateProfile({
-        displayName: displayName
-      })
+        usersData
+      });
+      db.collection('users').doc().set(usersData);
       
     },function(error){
       // Handle Errors here.
@@ -36,8 +48,20 @@ class Signup extends Component {
               <input id="signupFirstNameInput" style={styles.signupInput} placeholder="Enter your first name here (required)" ></input>
               <input id="signupLastNameInput" style={styles.signupInput} placeholder="Enter your last name here (required)" ></input>
               <input id="signupEmailInput" style={styles.signupInput} placeholder="Enter your e-mail here (required)"></input>
-              <input id="signupPasswordInput" style={styles.signupInput} placeholder="Enter your password here (required)"></input>
-              <input id="signupUserIDInput" style={styles.signupInput} placeholder="Enter your user ID here (optional)"></input>
+              <input id="signupPasswordInput" style={styles.signupInput} placeholder="Enter your password here (required)" type="password"></input>
+              <label style={styles.signupSelectLabel}>Select your title:</label>
+              <select id="signupTitleSelect" placeholder="Select Your Title" style={styles.signupStatusSelect}>
+                <option value="Project Lead" style={styles.projectStatusOption}>Project Lead</option>
+                <option value="Controls Engineer" style={styles.projectStatusOption}>Controls Engineer</option>
+                <option value="Electrical Designer" style={styles.projectStatusOption}>Electrical Designer</option>
+                <option value="Mechanical Engineer" style={styles.projectStatusOption}>Mechanical Engineer</option>
+                <option value="Mechanical Designer" style={styles.projectStatusOption}>Mechanical Designer</option>
+                <option value="Electrical Technician" style={styles.projectStatusOption}>Electrical Technician</option>
+                <option value="Mechanical Technician" style={styles.projectStatusOption}>Mechanical Technician</option>
+                <option value="Documentation Specialist" style={styles.projectStatusOption}>Documentation Specialist</option>
+                <option value="Manager" style={styles.projectStatusOption}>Manager</option>
+              </select>
+          {/*<input id="signupUserIDInput" style={styles.signupInput} placeholder="Enter your user ID here (optional)" ></input>*/}
           </div>
           <div className="signupButtonContainer" style={styles.signupButtonContainer}>
             <button className="signupButtonSubmit" key="signupButtonSubmit" style={styles.signupButtonSubmit} onClick={this.handleSubmitButtonClick}>SUBMIT</button>
@@ -85,6 +109,27 @@ const styles = {
     marginTop:40,
     fontSize:20
   },
+	signupSelectLabel:{
+		fontFamily:'Pathway Gothic One',
+		color:'white',
+		fontSize:22,
+		marginTop:80,
+		marginRight:10,
+		width:'40%',
+    textAlign:'right',
+	},
+	signupStatusSelect:{
+		width:'80%',
+		marginTop:20,
+		fontFamily:'Pathway Gothic One',
+		fontSize:20,
+    marginBottom:20,
+		
+	},
+	projectStatusOption:{
+		fontFamily:'Pathway Gothic One',
+		backgroundColor:'white'
+	},
   signupMainTitle:{
     fontFamily:'Fjalla One',
     color:'white',

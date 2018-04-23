@@ -58,7 +58,7 @@ const styles = {
     justifyContent:'center'
   },
   sideBarButtons:{
-    width:260,
+    width:120,
     height:50,
     backgroundColor:'white',
     border:'solid transparent 1px',
@@ -66,7 +66,7 @@ const styles = {
     paddingLeft:15,
     paddingRight:15,
     fontFamily:'Fjalla One',
-    fontSize:20,
+    fontSize:40,
     marginLeft:10,
     marginRight:10,
     marginBottom:10,
