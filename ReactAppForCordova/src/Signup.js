@@ -20,7 +20,8 @@ class Signup extends Component {
       fullName:displayName,
       email:emailInput.value,
       //userID:userIdInput.value,
-      userTitle:titleSelect.value
+      userTitle:titleSelect.value,
+      displayName:displayName
     }
     var db = firebase.firestore();
     firebase.auth().createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
@@ -35,8 +36,15 @@ class Signup extends Component {
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
+      var errorText = document.getElementById("errorMessageText");
+      console.log("%c" + errorMessage, "background-color: orange");      
+      errorText.style.color = 'white';
       // ...
     }); 
+  }
+  handleInputsClick=(e)=>{
+    var errorText = document.getElementById("errorMessageText");
+    errorText.style.color = 'blue';
   }
 
   render() {
@@ -44,11 +52,11 @@ class Signup extends Component {
       <StyleRoot>
         <div className="Login" style={styles.Signup}>
           <div className="signupContainer" style={styles.inputsContainer}>                 
-              <h1 className="signupMainTitle" style={styles.signupMainTitle}>Please log in:</h1>
-              <input id="signupFirstNameInput" style={styles.signupInput} placeholder="Enter your first name here (required)" ></input>
-              <input id="signupLastNameInput" style={styles.signupInput} placeholder="Enter your last name here (required)" ></input>
-              <input id="signupEmailInput" style={styles.signupInput} placeholder="Enter your e-mail here (required)"></input>
-              <input id="signupPasswordInput" style={styles.signupInput} placeholder="Enter your password here (required)" type="password"></input>
+              <h1 className="signupMainTitle" style={styles.signupMainTitle}>Please sign up:</h1>
+              <input id="signupFirstNameInput" style={styles.signupInput} placeholder="Enter your first name here (required)" onClick={this.handleInputsClick}></input>
+              <input id="signupLastNameInput" style={styles.signupInput} placeholder="Enter your last name here (required)" onClick={this.handleInputsClick}></input>
+              <input id="signupEmailInput" style={styles.signupInput} placeholder="Enter your e-mail here (required)" onClick={this.handleInputsClick}></input>
+              <input id="signupPasswordInput" style={styles.signupInput} placeholder="Enter your password here (required)" type="password" onClick={this.handleInputsClick}></input>
               <label style={styles.signupSelectLabel}>Select your title:</label>
               <select id="signupTitleSelect" placeholder="Select Your Title" style={styles.signupStatusSelect}>
                 <option value="Project Lead" style={styles.projectStatusOption}>Project Lead</option>
@@ -61,6 +69,8 @@ class Signup extends Component {
                 <option value="Documentation Specialist" style={styles.projectStatusOption}>Documentation Specialist</option>
                 <option value="Manager" style={styles.projectStatusOption}>Manager</option>
               </select>
+              <p className="errorMessage" id="errorMessageText" style={styles.errorMessage}> Is your e-mail and password correct? </p>
+
           {/*<input id="signupUserIDInput" style={styles.signupInput} placeholder="Enter your user ID here (optional)" ></input>*/}
           </div>
           <div className="signupButtonContainer" style={styles.signupButtonContainer}>
@@ -113,7 +123,7 @@ const styles = {
 		fontFamily:'Pathway Gothic One',
 		color:'white',
 		fontSize:22,
-		marginTop:80,
+		marginTop:40,
 		marginRight:10,
 		width:'40%',
     textAlign:'right',
@@ -122,24 +132,26 @@ const styles = {
 		width:'80%',
 		marginTop:20,
 		fontFamily:'Pathway Gothic One',
-		fontSize:20,
-    marginBottom:20,
-		
+		fontSize:20		
 	},
 	projectStatusOption:{
 		fontFamily:'Pathway Gothic One',
 		backgroundColor:'white'
-	},
+  },
+  errorMessage:{
+      color:'blue',
+      fontFamily:'Fjalla One',
+      marginBottom:30
+  },
   signupMainTitle:{
     fontFamily:'Fjalla One',
     color:'white',
     fontSize:28,
-    marginTop:140
+    marginTop:80
   },
   signupButtonContainer:{
     display:'flex',
     justifyContent:'center',
-
   },
   signupButtonSubmit:{
     backgroundColor:'white',

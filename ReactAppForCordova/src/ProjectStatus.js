@@ -109,9 +109,10 @@ class ProjectStatus extends Component{
             console.log('Error getting documents', err);
 		});
 		
-		this.updateAddMemberOptions();
+		
 		
 		*/
+		this.updateAddMemberOptions();
 	}
 	removeTeamMemberClick=(e)=>{		
 		var arrayOfTeamMembers = this.state.teamMembers;
